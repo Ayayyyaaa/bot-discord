@@ -40,7 +40,6 @@ async def mute_error(ctx, error):
         await ctx.send("Tu n'as pas la permission de mute les membres. Tu t'es cru où mdr")
 
 @bot.command(name="move")
-@has_permissions(move_members=True)
 async def move(ctx, member: discord.Member, *, channel_name: str):
     target_channel = discord.utils.get(ctx.guild.voice_channels, name=channel_name)
     if not target_channel:
@@ -48,7 +47,7 @@ async def move(ctx, member: discord.Member, *, channel_name: str):
         return
     if member.voice and member.voice.channel:
         await member.move_to(target_channel)
-        await ctx.send(f"{member.mention} a été déplacé dans {target_channel.name}. Au revoir et à jamais.")
+        await ctx.send(f"{member.mention} a été déplacé dans {target_channel.name}. Au revoir et à jamais. Je dirais même : Au cachot !")
     else:
         await ctx.send("Ce membre n'est pas dans un salon vocal. Pas fun. Viens là Jean-Michel")
 
