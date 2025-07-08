@@ -97,7 +97,10 @@ async def on_message(message):
     contenu = message.content.lower()
     for mot, reponse in mots_cles.items():
         if mot in contenu:
-            await message.channel.send(reponse)
+            if callable(reponse):
+                await message.channel.send(reponse())
+            else:
+                await message.channel.send(reponse)
     if user_id == id["Abel"]:
         prob = randint(0,9)
         if prob == 0:
