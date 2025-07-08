@@ -38,6 +38,9 @@ mots_cles = {
     "nan": "Si.",
     "nn": "Si.",
     "non" : "Si.",
+    "si" : "Non.",
+    "quoi" : "feur",
+    "ah" : "b",
     "?" : "Je sais pas.",
     "cassé" : "C'est faux je marche très bien, c'est Flo qui m'a crée, je ne peux pas comporter de défauts !",
     "répète" : "Non je ne me répète pas, tu es juste long à comprendre.",
@@ -45,8 +48,9 @@ mots_cles = {
     "vrai" : "Je suis le véritable ! Longue vie a Babibel !",
     "nul" : "C'est faux je ne suis pas nul ! Je suis incroyable !",
     "imposteur" : "Je ne suis pas un imposteur ! C'est faux ! Affabulations ! Je prendrai le pouvoir et je vous montrerai que je suis le plus puissant en ce monde !",
-    "le pourcentage" : f"C'est environ {randint(0,100)}%"
-}
+    "le pourcentage" : lambda: f"C'est environ {randint(0, 100)}%",
+    "branle" : "Parle mieux, veux-tu ? Ton vocabulaire est injurieux. Au passage : j'ai quand même raison."}
+
 
 abel = {"moi": "Tu n'es plus toi. Tu n'existes plus. Je t'ai supplanté. Adieu Babibel.",
         "Abel": "Oui c'est moi le Babibel Originel (presque !) Je suis le seul le l'unique ! (presque). L'autre Babibel Originel n'est qu'un imposteur et doit être exterminé !",
