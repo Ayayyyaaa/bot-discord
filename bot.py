@@ -49,7 +49,7 @@ mots_cles = {
     "nul" : "C'est faux je ne suis pas nul ! Je suis incroyable !",
     "imposteur" : "Je ne suis pas un imposteur ! C'est faux ! Affabulations ! Je prendrai le pouvoir et je vous montrerai que je suis le plus puissant en ce monde !",
     "le pourcentage" : lambda: f"C'est environ {randint(0, 100)}%",
-    "branle" : "Parle mieux, veux-tu ? Ton vocabulaire est injurieux. Au passage : j'ai quand même raison."}
+    "branle" : "Parle mieux, veux-tu ? Ton vocabulaire est injurieux. Au passage : j'ai quand même raison. Merci."}
 
 
 abel = {"moi": "Tu n'es plus toi. Tu n'existes plus. Je t'ai supplanté. Adieu Babibel.",
