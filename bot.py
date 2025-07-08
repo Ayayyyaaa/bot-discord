@@ -25,7 +25,6 @@ id = {"Jonathan":993111040583798788,
 
 
 @bot.command(name="mute")
-@has_permissions(mute_members=True)
 async def mute(ctx, member: discord.Member, duration: int):
     if member.voice and member.voice.channel:
         await member.edit(mute=True)
