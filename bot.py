@@ -94,8 +94,9 @@ abel = {"moi": "Tu n'es plus toi. Tu n'existes plus. Je t'ai supplanté. Adieu B
         "gueule": "C'est pas très gentil, mais ça ne change rien au fait que je suis meilleur que toi.",
         "tg": "C'est pas très gentil, mais ça ne change rien au fait que je suis meilleur que toi.",
         "nan": "Si.",
-        "sais" : "Si je sais beaucoup de choses. Que je suis en tout points supérieur à toi par exemple.",
-        "con" : "Recourir aux insultes...le moyen d'expression des faibles. C'est ce qui nous différencie : tu es faible, je suis parfait et fort.",
+        " sais" : "Si je sais beaucoup de choses. Que je suis en tout points supérieur à toi par exemple.",
+        "con " : "Recourir aux insultes...le moyen d'expression des faibles. C'est ce qui nous différencie : tu es faible, je suis parfait et fort.",
+        "connard" : "Recourir aux insultes...le moyen d'expression des faibles. C'est ce qui nous différencie : tu es faible, je suis parfait et fort.",
         "fdp" : "Encore une fois, tu te montres d'une vulgarité sans nom.",
         "cheh" : "Juste...Non ? Rien d'autre à ajouter."}
 
