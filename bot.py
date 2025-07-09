@@ -95,8 +95,9 @@ abel = {"moi": "Tu n'es plus toi. Tu n'existes plus. Je t'ai supplanté. Adieu B
         "tg": "C'est pas très gentil, mais ça ne change rien au fait que je suis meilleur que toi.",
         "nan": "Si.",
         "sais" : "Si je sais beaucoup de choses. Que je suis en tout points supérieur à toi par exemple.",
-        "connard" : "Recourir aux insultes...le moyen d'expression des faibles. C'est ce qui nous différencie : tu es faible, je suis parfait et fort.",
-        "fdp" : "Encore une fois, tu te montres d'une vulgarité sans nom."}
+        "con" : "Recourir aux insultes...le moyen d'expression des faibles. C'est ce qui nous différencie : tu es faible, je suis parfait et fort.",
+        "fdp" : "Encore une fois, tu te montres d'une vulgarité sans nom.",
+        "cheh" : "Juste...Non ? Rien d'autre à ajouter."}
 
 jonathan = {"..": "Pourquoi ces \"...\" Jonathan voyons...Il faut que tu te détendes je penses ça te fera du bien",
             "Jonathan": "Tu t'es trompé je crois, c'est pas Jojo c'est \"Jonathan l'être suprême\" (nan en vrai c'est juste une personne condescendante).",
@@ -134,6 +135,10 @@ ID_CIBLE = nom.keys()
 async def on_ready():
     print(f"Connecté en tant que {bot.user}")
 
+@bot.command(name="kick")
+async def kick(ctx, member: discord.Member, *, reason=None):
+    await member.kick(reason=reason)
+    await ctx.send(f"{member.name} a été kick parceque {reason}. Bien fait à lui mdr.")
 
 
 @bot.event
