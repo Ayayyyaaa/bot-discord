@@ -15,7 +15,7 @@ load_dotenv()
 intents = discord.Intents.default()
 intents.message_content = True  # Nécessaire pour lire les messages
 intents.members = True  # Obligatoire pour avoir accès aux mentions
-bot = commands.Bot(command_prefix="!", intents=intents)
+bot = commands.Bot(command_prefix="babi", intents=intents)
 
 id = {"Jonathan":993111040583798788,
       "Dany":610194100624424963,
@@ -26,6 +26,7 @@ id = {"Jonathan":993111040583798788,
 
 @bot.command(name="mute")
 async def mute(ctx, member: discord.Member, duration: int):
+    await ctx.message.delete()
     if member.voice and member.voice.channel:
         await member.edit(mute=True)
         await ctx.send(f"{member.mention} a été mute pendant {duration} secondes. Il le mérite bien 🤭")
@@ -43,13 +44,16 @@ async def mute_error(ctx, error):
 async def move(ctx, member: discord.Member, *, channel_name: str):
     target_channel = discord.utils.get(ctx.guild.voice_channels, name=channel_name)
     if not target_channel:
-        await ctx.send("Salon vocal non trouvé.")
+        await ctx.send("Salon vocal inexistant. Apprends à écrire.")
         return
     if member.voice and member.voice.channel:
         await member.move_to(target_channel)
         await ctx.send(f"{member.mention} a été déplacé dans {target_channel.name}. Au revoir et à jamais. Je dirais même : Au cachot !")
     else:
         await ctx.send("Ce membre n'est pas dans un salon vocal. Pas fun. Viens là Jean-Michel")
+    await ctx.message.delete()
+
+
 
 
 # Liste des mots-clés
@@ -66,7 +70,6 @@ mots_cles = {
     "viens": "Non tu es seul(e), tu n'as pas d'amis.",
     "venez": "Non tu es seul(e), tu n'as pas d'amis.",
     "nan": "Si.",
-    "nn": "Si.",
     "non" : "Si.",
     "si" : "Non.",
     "quoi" : "feur",
@@ -81,7 +84,9 @@ mots_cles = {
     "le pourcentage" : lambda: f"C'est environ {randint(0, 100)}%",
     "branle" : "Parle mieux, veux-tu ? Ton vocabulaire est injurieux. Au passage : j'ai quand même raison. Merci.",
     "mdr" : "Moi j'ai pas trouvé ça drôle.",
-    "chat" : "Des chaaaaaaats. Les meilleures créatures sur terre. C'est beaucoup trop chou les chats !!!!!!"}
+    "chat" : "Des chaaaaaaats. Les meilleures créatures sur terre. C'est beaucoup trop chou les chats !!!!!!",
+    "hein" : "Deux.",
+    "trois" : "Soleil."}
 
 
 abel = {"moi": "Tu n'es plus toi. Tu n'existes plus. Je t'ai supplanté. Adieu Babibel.",
@@ -89,7 +94,9 @@ abel = {"moi": "Tu n'es plus toi. Tu n'existes plus. Je t'ai supplanté. Adieu B
         "gueule": "C'est pas très gentil, mais ça ne change rien au fait que je suis meilleur que toi.",
         "tg": "C'est pas très gentil, mais ça ne change rien au fait que je suis meilleur que toi.",
         "nan": "Si.",
-        "sais" : "Si je sais beaucoup de choses. Que je suis en tout points supérieur à toi par exemple."}
+        "sais" : "Si je sais beaucoup de choses. Que je suis en tout points supérieur à toi par exemple.",
+        "connard" : "Recourir aux insultes...le moyen d'expression des faibles. C'est ce qui nous différencie : tu es faible, je suis parfait et fort.",
+        "fdp" : "Encore une fois, tu te montres d'une vulgarité sans nom."}
 
 jonathan = {"..": "Pourquoi ces \"...\" Jonathan voyons...Il faut que tu te détendes je penses ça te fera du bien",
             "Jonathan": "Tu t'es trompé je crois, c'est pas Jojo c'est \"Jonathan l'être suprême\" (nan en vrai c'est juste une personne condescendante).",
@@ -98,7 +105,10 @@ jonathan = {"..": "Pourquoi ces \"...\" Jonathan voyons...Il faut que tu te dét
             "nuit" : "Dors bien mon petit jojo l'agneau de bretagne...",
             "tg" : "C'est fou d'être aussi méchant mon petit Jojo",
             "respect" : "Le respect ? Il y en a toujours eu, et il y en aura toujours. Tu ne le mérites justes pas mon petit Jonathan.",
-            "!" : "Calme calme Jojo...Prends une grande respiration et purge cette impulsivité qui règne en toi..."}
+            "!" : "Calme calme Jojo...Prends une grande respiration et purge cette impulsivité qui règne en toi...",
+            "toupet" : "Non non non mon Jojo, je n'ai pas de toupet, car je suis le grand, l'unique et le seul, le plus parfait Babibel !",
+            "bonjour" : "Oh berk, pourquoi tu me dis bonjour ? Je peux quelque chose pour toi ?",
+            "hello" : "Hallo Jonathan, du bist ein Kartoffel salat !"}
 
 tiphaine = {"bonsoir" : "Bonsoir Duchesse violente",
             "Tiphaine": "Petit impertinent ! Lorsque tu t'adresses à elle appele la \"M'dame Tiphaine la Déesse ✨\" !",
@@ -126,13 +136,16 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
-    reponse = False
+    rep = False
+    if message.content[:4] == "babi":
+        rep = True
     if message.author == bot.user:
         return
     user_id = message.author.id
     contenu = message.content.lower()
     for mot, reponse in mots_cles.items():
         if mot in contenu:
+            rep = True
             if callable(reponse):
                 await message.channel.send(reponse())
             else:
@@ -140,17 +153,20 @@ async def on_message(message):
     if user_id == id["Abel"]:
         prob = randint(0,9)
         if prob == 0:
+            rep = True
             await message.channel.send("Imposteur ! Je deviendrai le seul et l'unique Babibel !")
     elif user_id == id["Dany"]:
         prob = randint(0,19)
         if prob == 0:
+            rep = True
             await message.channel.send("Je te vois Dany...tu n'es pas seul...je t'observe...")
     elif user_id == id["Jonathan"]:
         prob = randint(0,19)
         if prob == 0:
+            rep = True
             await message.channel.send("Je pense que tu devrais descendre d'un ton Jonathan ! Je suis pas mamie gateau moi.")
     for user in message.mentions:
-        if user.id in ID_CIBLE:
+        if user.id in ID_CIBLE and not rep:
             await message.channel.send(nom[user.id][1][nom[user.id][0]])
             break
     if user_id in nom:
