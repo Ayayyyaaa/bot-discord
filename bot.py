@@ -134,6 +134,8 @@ ID_CIBLE = nom.keys()
 async def on_ready():
     print(f"Connecté en tant que {bot.user}")
 
+
+
 @bot.event
 async def on_message(message):
     rep = False
@@ -143,6 +145,24 @@ async def on_message(message):
         return
     user_id = message.author.id
     contenu = message.content.lower()
+    if contenu in ["tg","emmerde"]:
+        await message.channel.send("Nan mais tu te calmes enfait. J'vais t'apprendre le respect moi. Tu la fermes pendant 10secondes voilà. Petit effronté.")
+        overwrite = discord.PermissionOverwrite()
+        overwrite.send_messages = False
+
+        try:
+            # Retire la permission d'envoyer des messages dans le salon actuel
+            await message.channel.set_permissions(message.author, overwrite=overwrite)
+            await asyncio.sleep(10)  # Attendre 10 secondes
+
+            # Réinitialise les permissions (retour à la normale)
+            await message.channel.set_permissions(message.author, overwrite=None)
+            await message.channel.send(f"{message.author.mention} est de retour... Malheureusement. Tu nous avais vraiment pas manqué. Fais gaffe à toi sinon j'te remute.")
+        except discord.Forbidden:
+            await message.channel.send("Je n'ai pas les permissions pour le faire 😭")
+        except Exception as e:
+            await message.channel.send(f"Une erreur est survenue : {e}")
+        return
     for mot, reponse in mots_cles.items():
         if mot in contenu:
             rep = True
@@ -175,6 +195,7 @@ async def on_message(message):
             if mot.lower() in contenu:
                 await message.channel.send(rep)
                 break
+    
 
     await bot.process_commands(message)
 
