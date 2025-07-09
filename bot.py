@@ -145,7 +145,7 @@ async def on_message(message):
         return
     user_id = message.author.id
     contenu = message.content.lower()
-    if contenu in ["tg","emmerde"]:
+    if "tg" in contenu or "emmerde" in contenu:
         await message.channel.send("Nan mais tu te calmes enfait. J'vais t'apprendre le respect moi. Tu la fermes pendant 10secondes voilà. Petit effronté.")
         overwrite = discord.PermissionOverwrite()
         overwrite.send_messages = False
