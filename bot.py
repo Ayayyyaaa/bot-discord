@@ -1,6 +1,7 @@
+from discord import app_commands
 import discord
 from discord.ext import commands
-from random import randint
+from random import randint, choice
 import os
 from dotenv import load_dotenv
 from discord.ext.commands import has_permissions, MissingPermissions
@@ -86,7 +87,9 @@ mots_cles = {
     "mdr" : "Moi j'ai pas trouvé ça drôle.",
     "chat" : "Des chaaaaaaats. Les meilleures créatures sur terre. C'est beaucoup trop chou les chats !!!!!!",
     "hein" : "Deux.",
-    "trois" : "Soleil."}
+    "trois" : "Soleil.",
+    "oui" : "Non.",
+    "fiche" : "Non tu ne t'en fiches pas. Tu es juste dans le déni."}
 
 
 abel = {"moi": "Tu n'es plus toi. Tu n'existes plus. Je t'ai supplanté. Adieu Babibel.",
@@ -98,9 +101,10 @@ abel = {"moi": "Tu n'es plus toi. Tu n'existes plus. Je t'ai supplanté. Adieu B
         "con " : "Recourir aux insultes...le moyen d'expression des faibles. C'est ce qui nous différencie : tu es faible, je suis parfait et fort.",
         "connard" : "Recourir aux insultes...le moyen d'expression des faibles. C'est ce qui nous différencie : tu es faible, je suis parfait et fort.",
         "fdp" : "Encore une fois, tu te montres d'une vulgarité sans nom.",
-        "cheh" : "Juste...Non ? Rien d'autre à ajouter."}
+        "cheh" : "Juste...Non ? Rien d'autre à ajouter.",
+        "coucher" : "Tu me parles pas sur ce ton enfait. Nan mais oh."}
 
-jonathan = {"..": "Pourquoi ces \"...\" Jonathan voyons...Il faut que tu te détendes je penses ça te fera du bien",
+jonathan = {"..": lambda : choice("Pourquoi ces \"...\" Jonathan voyons...Il faut que tu te détendes je penses ça te fera du bien","Allons jojo...Un peu plus d'entrain je t'en prie.","Tant d'exaspération dans ta voix...Il n'y a pas à être condescendant comme ça mon petit...","Débarasse toi de ce mépris qu'il y a en toi...awoop comme tu dirais...On dirait Dany avec sa basse classe."),
             "Jonathan": "Tu t'es trompé je crois, c'est pas Jojo c'est \"Jonathan l'être suprême\" (nan en vrai c'est juste une personne condescendante).",
             "wesh" : "Toujours cette condescendance en toi.",
             "today" : "Arrête de parler anglais c'est fou ça.",
@@ -122,7 +126,8 @@ florian = {"Florian": "Le nerd de service 🤓",
            "mon amour" : "Ooooh Tiphaine, tu es la plus belle, la plus gentille, la plus parfaite personne qui puis exister. Je t'aime plus que tout au monde. Merci."}
 
 dany = {"mskn" : "Mskn toi mêmeuuuuuh",
-        "Dany": "Pfff tu crois quoi Dany jamais il te répond il est toujours en retard. Attends encore 2 heures."}
+        "Dany": "Pfff tu crois quoi Dany jamais il te répond il est toujours en retard. Attends encore 2 heures.",
+        "bot" : "Je suis peut-être un bot, mais tu es un dictateur !"}
 
 nom = {993111040583798788:["Jonathan",jonathan],
       610194100624424963:["Dany",dany],
@@ -134,13 +139,26 @@ ID_CIBLE = nom.keys()
 
 @bot.event
 async def on_ready():
-    print(f"Connecté en tant que {bot.user}")
+    await bot.wait_until_ready()
+    try:
+        synced = await bot.tree.sync()
+        print(f"✅ {len(synced)} commande(s) slash synchronisée(s).")
+    except Exception as e:
+        print(f"Erreur lors de la synchronisation des commandes : {e}")
+
 
 @bot.command(name="kick")
 async def kick(ctx, member: discord.Member, *, reason=None):
     await member.kick(reason=reason)
     await ctx.send(f"{member.name} a été kick parceque {reason}. Bien fait à lui mdr.")
 
+@bot.tree.command(name="babichoice", description="La voie de la raison. Il te répondra par l'une des personnes iconiques de ce groupe.")
+@app_commands.describe(sujet="La question existentielle à laquelle tu cherches une réponse.")
+async def choix(interaction: discord.Interaction, sujet: str = None):
+    if not sujet:
+        await interaction.response.send_message("Tu sais pas utiliser une commande ou c'est comment ? Faut que tu mettes la question sinon je peux pas te répondre.")
+    choisi = choice(list(id.keys()))
+    await interaction.response.send_message(f"{sujet} est {choisi}. L'info est fiable à 100% sauf si elle est en défaveur de Florian ou Tiphaine. Merci et bonne journée.")
 
 @bot.event
 async def on_message(message):
@@ -182,19 +200,15 @@ async def on_message(message):
             rep = True
             await message.channel.send("Imposteur ! Je deviendrai le seul et l'unique Babibel !")
     elif user_id == id["Dany"]:
-        prob = randint(0,19)
+        prob = randint(0,15)
         if prob == 0:
             rep = True
             await message.channel.send("Je te vois Dany...tu n'es pas seul...je t'observe...")
     elif user_id == id["Jonathan"]:
-        prob = randint(0,19)
+        prob = randint(0,15)
         if prob == 0:
             rep = True
             await message.channel.send("Je pense que tu devrais descendre d'un ton Jonathan ! Je suis pas mamie gateau moi.")
-    for user in message.mentions:
-        if user.id in ID_CIBLE and not rep:
-            await message.channel.send(nom[user.id][1][nom[user.id][0]])
-            break
     if user_id in nom:
         perso_dict = nom[user_id][1]
         for mot, rep in perso_dict.items():
