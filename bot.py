@@ -117,7 +117,7 @@ mots_cles = {
     "fiche" : "Non tu ne t'en fiches pas. Tu es juste dans le déni.",
     "mskn": lambda : choice(("Mskn toi mêmeuuuh", "J'pense c'est plutôt toi la miskine enfait")),
     "insupportable" : "Non c'est pas insupportable, c'est toi qui es insupportable.",
-    "blague" : blague(),
+    "blague" : lambda : blague(),
     "😭" : lambda : choice(("Pleure oui c'est ça pleure.", "Ohlala qu'est-ce que je me délecte de tes larmes..."))}
 
 
