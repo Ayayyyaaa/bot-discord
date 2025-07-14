@@ -54,6 +54,31 @@ async def move(ctx, member: discord.Member, *, channel_name: str):
         await ctx.send("Ce membre n'est pas dans un salon vocal. Pas fun. Viens là Jean-Michel")
     await ctx.message.delete()
 
+def blague():
+    rep = "Tu veux une blague ? Tiens avec plaisir hehe...Promis je suis aussi fort que Cyno ou la Citroën de Dany...Je reste un Babibel après tout\n\n"
+    blagues = ["***Qu'est ce qui n'est pas un steak ? ✨*** \n\n*||Une Pastèque mdr ||*",
+               "***L'autre jour j'ai raconté une blague à mes vêtements...✨*** \n\n*||Et ils étaient pliés mdr ||*",
+               "***Comment appelle-t-on une chauve-souris qui porte une péruque ? ✨*** \n\n*||Une souris mdr ||*",
+               "***Qu'est ce qui est blanc, froid, qui tombe en hiver et qui termine par ard ? ✨*** \n\n*||De la neige, connard -_- ||*\n\n***Qu'est ce qui est blanc, froid, qui tombe en hiver et qui termine par ire ? ✨***\n\n*||De la neige, je viens de te le dire... -_- ||*",
+               "***Pourquoi les aveugles tutoient toujours ? ✨*** \n\n*||Car ils ne vous voient pas mdr ||*",
+               "***Qu'est-ce qui est jaune et qui attend ? ✨*** \n\n*-> Jonathan* \n\n*||Zhongli qui attend sa paye ||*",
+               "***C'est l'histoire d'un mec sans bras.. ✨*** \n\n*||... Il applaudit pas la blague. ||*",
+               "***Tu connais la blague du bouton 'fermer la bouche' ? ✨*** \n\n*||Dommage, t'as jamais su l'activer. ||*",
+               "***Tu connais la blague de Dany ? ✨*** \n\n*||Il est jamais arrivé pour la raconter -_- ||*",
+               "***Pourquoi les brioches ne vont pas aux sports d'hiver ? ✨*** \n\n*||Parcequ'elles savent Pasquier mdr||*",
+               "***Pourquoi vaut il mieux être software que hardware ? ✨*** \n\n*||Car c'est le hardware qui prend des coups quand le software plante.||*",
+               "***J'allais faire une blague sur l'erreur 404... ✨*** \n\n*||Je ne l'ai pas trouvée...||*",
+               "***Si un schizophrène, ... ✨*** \n\n*||...l'autre accélère ?||*",
+               "***Un psychologue à un prêtre : \"- Qu'est-ce qui vous empêche d'être vous même ? \" ✨*** \n\n*||Le code pénal.||*",
+               "***Pourquoi les décapités deviennent-ils fous ? ✨*** \n\n*||Parce qu'ils perdent la tête !||*",
+               "***Tu connais la blague de Jonathan ? ✨*** \n\n*||Elle est avec lui dans les toilettes mdr||*",
+               "***Ma copine m'a larguée après avoir donné son nom à une classe... ✨*** \n\n*||Elle avait l'impression que je la traitais comme un objet...||*",
+               "***Comment appeller Abel pour manger ? ✨*** \n\n*||Avec Alt + Tab||*",
+               "***Le fichier main.py c'est comme ton coeur... ✨*** \n\n*||S'il marche plus, il y a tout qui foire mdr||*",
+               "***L'autre jour j'ai fait une blague Harry Potter... ✨*** \n\n*||Mais personne n'Harry...😔||*",
+               "***Quelle est la différence entre un cancer et un politicien ? ✨*** \n\n*||L'un commence dans une cellule et l'autre termine dans une cellule.||*"]
+    rep += choice(blagues)
+    return rep
 
 
 
@@ -75,7 +100,7 @@ mots_cles = {
     "si" : "Non.",
     "quoi" : "feur",
     "ah" : "b",
-    "?" : "Je sais pas.",
+    "?" : lambda : choice(("Oui.","Je sais pas.","Non.","C'est quoi ces questions connes mdr")),
     "cassé" : "C'est faux je marche très bien, c'est Flo qui m'a crée, je ne peux pas comporter de défauts !",
     "répète" : "Non je ne me répète pas, tu es juste long à comprendre.",
     "fou" : "C'est fort malpoli de parler ainsi.",
@@ -89,7 +114,12 @@ mots_cles = {
     "hein" : "Deux.",
     "trois" : "Soleil.",
     "oui" : "Non.",
-    "fiche" : "Non tu ne t'en fiches pas. Tu es juste dans le déni."}
+    "fiche" : "Non tu ne t'en fiches pas. Tu es juste dans le déni.",
+    "mskn": lambda : choice(("Mskn toi mêmeuuuh", "J'pense c'est plutôt toi la miskine enfait")),
+    "insupportable" : "Non c'est pas insupportable, c'est toi qui es insupportable.",
+    "blague" : blague(),
+    "😭" : lambda : choice(("Pleure oui c'est ça pleure.", "Ohlala qu'est-ce que je me délecte de tes larmes..."))}
+
 
 
 abel = {"moi": "Tu n'es plus toi. Tu n'existes plus. Je t'ai supplanté. Adieu Babibel.",
@@ -101,11 +131,11 @@ abel = {"moi": "Tu n'es plus toi. Tu n'existes plus. Je t'ai supplanté. Adieu B
         "con " : "Recourir aux insultes...le moyen d'expression des faibles. C'est ce qui nous différencie : tu es faible, je suis parfait et fort.",
         "connard" : "Recourir aux insultes...le moyen d'expression des faibles. C'est ce qui nous différencie : tu es faible, je suis parfait et fort.",
         "fdp" : "Encore une fois, tu te montres d'une vulgarité sans nom.",
-        "cheh" : "Juste...Non ? Rien d'autre à ajouter.",
+        "cheh" : lambda : choice(("Juste...Non ? Rien d'autre à ajouter.","Go go go, miroir de cheh ! Je suis immunisé, t'as perdu, cheh toi même ! Cheh !")),
         "coucher" : "Tu me parles pas sur ce ton enfait. Nan mais oh."}
 
-jonathan = {"..": lambda : choice("Pourquoi ces \"...\" Jonathan voyons...Il faut que tu te détendes je penses ça te fera du bien","Allons jojo...Un peu plus d'entrain je t'en prie.","Tant d'exaspération dans ta voix...Il n'y a pas à être condescendant comme ça mon petit...","Débarasse toi de ce mépris qu'il y a en toi...awoop comme tu dirais...On dirait Dany avec sa basse classe."),
-            "Jonathan": "Tu t'es trompé je crois, c'est pas Jojo c'est \"Jonathan l'être suprême\" (nan en vrai c'est juste une personne condescendante).",
+jonathan = {"..": lambda : choice(("Pourquoi ces \"...\" Jonathan voyons...Il faut que tu te détendes je penses ça te fera du bien","Allons jojo...Un peu plus d'entrain je t'en prie.","Tant d'exaspération dans ta voix...Il n'y a pas à être condescendant comme ça mon petit...","Débarasse toi de ce mépris qu'il y a en toi...awoop comme tu dirais...On dirait Dany avec sa basse classe.")),
+            "Jonathan": lambda : choice(("Tu t'es trompé je crois, c'est pas Jojo c'est \"Jonathan l'être suprême\" (nan en vrai c'est juste une personne condescendante).","Eh oh c'est bon Jojo là arrête de crier dès le matin.")),
             "wesh" : "Toujours cette condescendance en toi.",
             "today" : "Arrête de parler anglais c'est fou ça.",
             "nuit" : "Dors bien mon petit jojo l'agneau de bretagne...",
@@ -114,7 +144,8 @@ jonathan = {"..": lambda : choice("Pourquoi ces \"...\" Jonathan voyons...Il fau
             "!" : "Calme calme Jojo...Prends une grande respiration et purge cette impulsivité qui règne en toi...",
             "toupet" : "Non non non mon Jojo, je n'ai pas de toupet, car je suis le grand, l'unique et le seul, le plus parfait Babibel !",
             "bonjour" : "Oh berk, pourquoi tu me dis bonjour ? Je peux quelque chose pour toi ?",
-            "hello" : "Hallo Jonathan, du bist ein Kartoffel salat !"}
+            "hello" : "Hallo Jonathan, du bist ein Kartoffel salat !",
+            "gueule":"Eh oh tu te calmes ou j'vais te retrouver tu vas voir"}
 
 tiphaine = {"bonsoir" : "Bonsoir Duchesse violente",
             "Tiphaine": "Petit impertinent ! Lorsque tu t'adresses à elle appele la \"M'dame Tiphaine la Déesse ✨\" !",
@@ -123,10 +154,10 @@ tiphaine = {"bonsoir" : "Bonsoir Duchesse violente",
 
 florian = {"Florian": "Le nerd de service 🤓",
            "bonjour" : "Oh ! Une personne incroyable fait son apparition",
-           "mon amour" : "Ooooh Tiphaine, tu es la plus belle, la plus gentille, la plus parfaite personne qui puis exister. Je t'aime plus que tout au monde. Merci."}
+           "mon amour" : "Ooooh Tiphaine, tu es la plus belle, la plus gentille, la plus parfaite personne qui puis exister. Je t'aime plus que tout au monde. Merci.",
+           "ta gueule":"D'accord, désolé de vous avoir importuné 😔. Sur ce, passez un très agréable moment. "}
 
-dany = {"mskn" : "Mskn toi mêmeuuuuuh",
-        "Dany": "Pfff tu crois quoi Dany jamais il te répond il est toujours en retard. Attends encore 2 heures.",
+dany = {"Dany": "Pfff tu crois quoi Dany jamais il te répond il est toujours en retard. Attends encore 2 heures.",
         "bot" : "Je suis peut-être un bot, mais tu es un dictateur !"}
 
 nom = {993111040583798788:["Jonathan",jonathan],
@@ -160,6 +191,10 @@ async def choix(interaction: discord.Interaction, sujet: str = None):
     choisi = choice(list(id.keys()))
     await interaction.response.send_message(f"{sujet} est {choisi}. L'info est fiable à 100% sauf si elle est en défaveur de Florian ou Tiphaine. Merci et bonne journée.")
 
+@bot.tree.command(name="babiblague", description="Des blagues à fendre la poire, au niveau de celles de Cyno.")
+async def choix(interaction: discord.Interaction):
+    await interaction.response.send_message(blague())
+
 @bot.event
 async def on_message(message):
     rep = False
@@ -167,6 +202,10 @@ async def on_message(message):
         rep = True
     if message.author == bot.user:
         return
+    if bot.user in message.mentions:
+        await message.channel.send("Tu t'es cru ou à me ping ? Tu veux te battre ? 😤")
+        return
+
     user_id = message.author.id
     contenu = message.content.lower()
     if "tg" in contenu or "emmerde" in contenu:
