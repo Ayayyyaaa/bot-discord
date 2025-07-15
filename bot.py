@@ -223,7 +223,8 @@ persos = {"Diluc" : ["Cheveux rouges", "Mondstadt", "Grand", "Manteau", "Gants",
           "Nibelung" : ["Second Souverain", "Dragon", "Connaissance interdite", "Guerre", "Clous divins", "Création des gnosis"],
           "Diona" : ["Alcool", "Chasse", "Arc", "Cheveux roses", "Chat", "Petit", "Femme", "Mondstadt", "Cryo", "Chapeau"],
           "Ayato" : ["Bubble Tea", "Épée à 1 main", "Inazuma", "Cheveux bleus", "Bien habillé", "Hydro", "Chef", "Élégant", "Beauté Réfléchie"],
-          "Tartaglia" : ["Skirk", "Fatui", "Cheveux roux", "Hydro", "Bien habillé", "Masque", "Posture du démon", "Arc", "Dagues", "Cape rouge", "Gants", "Narval", "Force", "Jeune Sire", "Abîme"]
+          "Tartaglia" : ["Skirk", "Fatui", "Cheveux roux", "Hydro", "Bien habillé", "Masque", "Posture du démon", "Arc", "Dagues", "Cape rouge", "Gants", "Narval", "Force", "Jeune Sire", "Abîme"],
+          "Ayaka" : ["Femme", "Cryo", "Épée à 1 main", "Danse", "Cheveux bleus", "Robe", "Armure", "Éventail", "Inazuma", "Héron"]
           }
 
 
