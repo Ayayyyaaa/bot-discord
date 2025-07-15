@@ -205,10 +205,25 @@ async def choix(interaction: discord.Interaction):
 
 persos = {"Diluc" : ["Cheveux rouges", "Mondstadt", "Grand", "Manteau", "Gants", "Bien habillé", "Ceinture", "Pyro", "Claymore", "Vin", "Riche", "Blazé"],
           "Mona" : ["Chapeau", "Étoiles", "Mondstadt", "Moyen", "Gants", "Collants", "Tenue bleue/violette", "Pauvre", "Catalyseur", "Femme"],
-          "Istaroth" : ["Temps", "Cheveux blancs", "Ombre", "Gants", "Cheveux longs", "Vent", "Tenue blanche", "Truc qui vole au-dessus de sa tête", "Femme","Très vieux"],
-          "Pierro" : ["Fatui", "Masque", "Cheveux Blancs", "Chef", "+ fort qu'un dieu", "Khaenri'ah", "Rebellion", "Très vieux"],
+          "Istaroth" : ["Temps", "Cheveux blancs", "Ombre", "Gants", "Cheveux longs", "Vent", "Tenue blanche", "Truc qui vole au-dessus de sa tête","Très vieux"],
+          "Pierro" : ["Fatui", "Masque", "Cheveux Blancs", "Chef", "+ fort qu'un dieu", "Khaenri'ah", "Rebellion", "Très vieux", "Le Fou"],
           "Neuvilette" : ["Hydro", "Fontaine", "Juge", "Charisme", "Mélusines", "Cheveux blancs", "Cheveux longs", "Dragon", "Bien habillé", "Habits bleus", "Très vieux", "Canne", "Grand"],
           "Alhaitham" : ["Dendro", "Sumeru", "Épée à 1 main", "Musclé", "Académie", "Grand", "Cheveux gris","Cape","Intelligent"],
+          "Durin" : ["Rhinedottir", "Alchimie", "Dragon", "Super puissant", "Dosdragon", "Méchant"],
+          "Dori" : ["Cheveux roses", "Claymore", "Tenue violette", "Électro", "Radin", "Moras", "Marchand", "Sumeru", "Lunettes", "Femme"],
+          "Amber" : ["Cheveux bruns", "Lunettes", "Habits rouges", "Pyro", "Arc", "Peluche", "Éclaireur", "Femme", "Favonius"],
+          "Kaeya" : ["Fourrure", "Cryo", "Favonius", "Capitaine", "Cheveux bleus", "Épée à 1 main", "Mondstadt", "Cache-oeil", "Khaenri'ah", "Homme"],
+          "Jean" : ["Favonius", "Grand Maître", "Anémo", "Blond", "Tenue blanche", "Épée à 1 main", "Pissenlit", "Lion", "Queue de cheval", "Femme"],
+          "Albedo" : ["Blond", "Alchimiste", "Favonius", "Mondstadt", "Géo", "Épée à 1 main", "Dosdragons", "Rhinedottir", "Perfection", "Très puissant", "Art de Khemia"],
+          "Sucrose" : ["Femme", "Assistant", "Cheveux verts", "Anémo", "Catalyseur", "Lunettes", "Alchimiste", "Mondstadt", "Hypostases", "Vêtements bleus/blancs"],
+          "Venti" : ["Archon", "Anémo", "Arc", "Savoir immense", "Mondstadt", "Barde", "Alcool", "Esprit du vent", "Liberté", "Lyre", "Collants", "Tenue verte", "Très vieux"],
+          "Dvalin" : ["Dragon", "Anémo", "4 vents", "Mondstadt", "Très vieux", "Corrompu", "Bleu", "Protecteur", "Cristal"],
+          "Deshret" : ["Roi écarlate", "Roi-Dieu", "Molrani Rukkhadevata + Nabu Malikata", "Désert", "Connaissance interdite", "Pyramides", "Mort", "Érémites"],
+          "Orobashi" : ["Dieu", "Serpent", "Inazuma", "Enkanomia", "Battu par Ei", "Tatarigami", "Mer Noire"],
+          "Nibelung" : ["Second Souverain", "Dragon", "Connaissance interdite", "Guerre", "Clous divins", "Création des gnosis"],
+          "Diona" : ["Alcool", "Chasse", "Arc", "Cheveux roses", "Chat", "Petit", "Femme", "Mondstadt", "Cryo", "Chapeau"],
+          "Ayato" : ["Bubble Tea", "Épée à 1 main", "Inazuma", "Cheveux bleus", "Bien habillé", "Hydro", "Chef", "Élégant", "Beauté Réfléchie"],
+          "Tartaglia" : ["Skirk", "Fatui", "Cheveux roux", "Hydro", "Bien habillé", "Masque", "Posture du démon", "Arc", "Dagues", "Cape rouge", "Gants", "Narval", "Force", "Jeune Sire", "Abîme"]
           }
 
 
