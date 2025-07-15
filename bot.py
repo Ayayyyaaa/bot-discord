@@ -1,11 +1,15 @@
 from discord import app_commands
 import discord
 from discord.ext import commands
-from random import randint, choice
+from random import randint, choice, sample
 import os
 from dotenv import load_dotenv
 from discord.ext.commands import has_permissions, MissingPermissions
 import asyncio
+#from invocs import *
+import numpy as np
+from datetime import datetime
+
 
 
 
@@ -166,6 +170,13 @@ nom = {993111040583798788:["Jonathan",jonathan],
       689421347834953733:["Tiphaine",tiphaine],
       716927140796301312:["Florian",florian]}
 
+react = {"Dany" : "🐦",
+         "Mathis" : "🐋",
+         "Jonathan" : "🤮",
+         "Florian" : "🤓",
+         "Abel" : "🤮",
+         "Tiphaine" : "✨"}
+
 ID_CIBLE = nom.keys()
 
 @bot.event
@@ -195,6 +206,45 @@ async def choix(interaction: discord.Interaction, sujet: str = None):
 async def choix(interaction: discord.Interaction):
     await interaction.response.send_message(blague())
 
+persos = {"Diluc" : ["Cheveux rouges", "Mondstadt", "Grand", "Manteau", "Gants", "Bien habillé", "Ceinture", "Pyro", "Claymore", "Vin", "Riche", "Blazé"],
+          "Mona" : ["Chapeau", "Étoiles", "Mondstadt", "Moyen", "Gants", "Collants", "Tenue bleue/violette", "Pauvre", "Catalyseur", "Femme"],
+          "Istaroth" : ["Temps", "Cheveux blancs", "Ombre", "Gants", "Cheveux longs", "Vent", "Tenue blanche", "Truc qui vole au-dessus de sa tête", "Femme","Très vieux"],
+          "Pierro" : ["Fatui", "Masque", "Cheveux Blancs", "Chef", "+ fort qu'un dieu", "Khaenri'ah", "Rebellion", "Très vieux"],
+          "Neuvilette" : ["Hydro", "Fontaine", "Juge", "Charisme", "Mélusines", "Cheveux blancs", "Cheveux longs", "Dragon", "Bien habillé", "Habits bleus", "Très vieux", "Canne", "Grand"],
+          "Alhaitham" : ["Dendro", "Sumeru", "Épée à 1 main", "Musclé", "Académie", "Grand", "Cheveux gris","Cape","Intelligent"],
+          }
+
+
+@bot.tree.command(name="babinette", description="Devine le perso genshin ! Pour trouver les plus gros nerds.")
+async def devinette(interaction: discord.Interaction):
+    # Choisit un personnage au hasard
+    perso, caract = choice(list(persos.items()))
+    indices = sample(caract, 3)
+
+    await interaction.response.send_message(
+        f"🔍 Trouve le perso Genshin avec ces 3 indices :\n"
+        f"• {indices[0]}\n"
+        f"• {indices[1]}\n"
+        f"• {indices[2]}\n\n"
+        f"Réponds dans le chat (15 secondes) !"
+    )
+
+    def check(msg):
+        return (
+            msg.channel == interaction.channel
+            and not msg.author.bot
+        )
+
+    try:
+        msg = await bot.wait_for("message", check=check, timeout=15)
+
+        if msg.content.strip().lower() == perso.lower():
+            await interaction.followup.send(f"✅ Bravo {msg.author.mention} ! La bonne réponse était bien **{perso}**. Mouais ok ça passe t'es pas trop nul...")
+        else:
+            await interaction.followup.send(f"❌ Mauvaise réponse, {msg.author.mention} ! C'était **{perso}**. \nT'es vraiment super nul...")
+    except asyncio.TimeoutError:
+        await interaction.followup.send(f"⏱️ Temps écoulé ! La bonne réponse était **{perso}**. \nT'es vraiment super nul...")
+
 @bot.event
 async def on_message(message):
     rep = False
@@ -203,7 +253,7 @@ async def on_message(message):
     if message.author == bot.user:
         return
     if bot.user in message.mentions:
-        await message.channel.send("Tu t'es cru ou à me ping ? Tu veux te battre ? 😤")
+        await message.channel.send(choice(("Tu t'es cru ou à me ping ? Tu veux te battre ? 😤", "Tu oses ping le grand, le beau, la parfait Babibel Artificiel ??!! Mortel imprtinent ! (à ne pas confondre avec le Babibel Originel, lui il est nul)")))
         return
 
     user_id = message.author.id
@@ -254,8 +304,16 @@ async def on_message(message):
             if mot.lower() in contenu:
                 await message.channel.send(rep)
                 break
+    for nom, emoji in react.items():
+        if nom.lower() in message.content.lower():
+            try:
+                await message.add_reaction(emoji)
+            except discord.HTTPException:
+                print(f"Impossible d'ajouter la réaction {emoji} pour {nom}")
     
 
     await bot.process_commands(message)
+
+
 
 bot.run(os.getenv("TOKEN"))
