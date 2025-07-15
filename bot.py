@@ -226,7 +226,9 @@ persos = {"Diluc" : ["Cheveux rouges", "Mondstadt", "Grand", "Manteau", "Gants",
           "Tartaglia" : ["Skirk", "Fatui", "Cheveux roux", "Hydro", "Bien habillé", "Masque", "Posture du démon", "Arc", "Dagues", "Cape rouge", "Gants", "Narval", "Force", "Jeune Sire", "Abîme"],
           "Ayaka" : ["Femme", "Cryo", "Épée à 1 main", "Danse", "Cheveux bleus", "Robe", "Armure", "Éventail", "Inazuma", "Héron"],
           "Xiao" : ["Démons", "Cheveux verts","Lance","Tofu","Rêves","Anémo","Masque","Tatouages","Liyue","Adepte"],
-          "Signora" : ["Sorcière", "Mondstadt", "Flammes ardentes", "Fatui", "La Demoiselle", "Femme", "Pyro","Cryo","Masque", "Cheveux blonds", "Cape rouge", "Rosalyne"]
+          "Signora" : ["Sorcière", "Mondstadt", "Flammes ardentes", "Fatui", "La Demoiselle", "Femme", "Pyro","Cryo","Masque", "Cheveux blonds", "Cape rouge", "Rosalyne"],
+          "Alice" : ["Hexenzirkel", "Sorcière", "Pyro", "Dodoco", "Millénaire", "Connaissances infinies", "Comportement destructeur", "Chapeau"],
+          "Ronova" : ["Ombre", "Mort", "Malédiction", "Cataclysme", "Cheveux blancs", "Très vieux", "Ailes", "6 yeux", "Puni", "Triquetra"]
           }
 
 
