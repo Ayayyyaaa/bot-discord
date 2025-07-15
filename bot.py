@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from discord.ext.commands import has_permissions, MissingPermissions
 import asyncio
 #from invocs import *
-import numpy as np
+#import numpy as np
 from datetime import datetime
 
 
