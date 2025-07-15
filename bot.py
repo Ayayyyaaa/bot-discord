@@ -164,7 +164,7 @@ florian = {"Florian": "Le nerd de service 🤓",
 dany = {"Dany": "Pfff tu crois quoi Dany jamais il te répond il est toujours en retard. Attends encore 2 heures.",
         "bot" : "Je suis peut-être un bot, mais tu es un dictateur !"}
 
-nom = {993111040583798788:["Jonathan",jonathan],
+noms = {993111040583798788:["Jonathan",jonathan],
       610194100624424963:["Dany",dany],
     689011423208013842:["Abel",abel],
       689421347834953733:["Tiphaine",tiphaine],
@@ -177,7 +177,7 @@ react = {"Dany" : "🐦",
          "Abel" : "🤮",
          "Tiphaine" : "✨"}
 
-ID_CIBLE = nom.keys()
+ID_CIBLE = noms.keys()
 
 @bot.event
 async def on_ready():
@@ -298,14 +298,15 @@ async def on_message(message):
         if prob == 0:
             rep = True
             await message.channel.send("Je pense que tu devrais descendre d'un ton Jonathan ! Je suis pas mamie gateau moi.")
-    if user_id in nom:
-        perso_dict = nom[user_id][1]
+    if user_id in noms:
+        perso_dict = noms[user_id][1]
         for mot, rep in perso_dict.items():
             if mot.lower() in contenu:
                 await message.channel.send(rep)
                 break
     for nom, emoji in react.items():
         if nom.lower() in message.content.lower():
+            print("hello")
             try:
                 await message.add_reaction(emoji)
             except discord.HTTPException:
