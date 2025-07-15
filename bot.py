@@ -224,7 +224,9 @@ persos = {"Diluc" : ["Cheveux rouges", "Mondstadt", "Grand", "Manteau", "Gants",
           "Diona" : ["Alcool", "Chasse", "Arc", "Cheveux roses", "Chat", "Petit", "Femme", "Mondstadt", "Cryo", "Chapeau"],
           "Ayato" : ["Bubble Tea", "Épée à 1 main", "Inazuma", "Cheveux bleus", "Bien habillé", "Hydro", "Chef", "Élégant", "Beauté Réfléchie"],
           "Tartaglia" : ["Skirk", "Fatui", "Cheveux roux", "Hydro", "Bien habillé", "Masque", "Posture du démon", "Arc", "Dagues", "Cape rouge", "Gants", "Narval", "Force", "Jeune Sire", "Abîme"],
-          "Ayaka" : ["Femme", "Cryo", "Épée à 1 main", "Danse", "Cheveux bleus", "Robe", "Armure", "Éventail", "Inazuma", "Héron"]
+          "Ayaka" : ["Femme", "Cryo", "Épée à 1 main", "Danse", "Cheveux bleus", "Robe", "Armure", "Éventail", "Inazuma", "Héron"],
+          "Xiao" : ["Démons", "Cheveux verts","Lance","Tofu","Rêves","Anémo","Masque","Tatouages","Liyue","Adepte"],
+          "Signora" : ["Sorcière", "Mondstadt", "Flammes ardentes", "Fatui", "La Demoiselle", "Femme", "Pyro","Cryo","Masque", "Cheveux blonds", "Cape rouge", "Rosalyne"]
           }
 
 
@@ -239,7 +241,7 @@ async def devinette(interaction: discord.Interaction):
         f"• {indices[0]}\n"
         f"• {indices[1]}\n"
         f"• {indices[2]}\n\n"
-        f"Réponds dans le chat (15 secondes) !"
+        f"Réponds dans le chat (30 secondes) !"
     )
 
     def check(msg):
@@ -249,7 +251,7 @@ async def devinette(interaction: discord.Interaction):
         )
 
     try:
-        msg = await bot.wait_for("message", check=check, timeout=15)
+        msg = await bot.wait_for("message", check=check, timeout=30)
 
         if msg.content.strip().lower() == perso.lower():
             await interaction.followup.send(f"✅ Bravo {msg.author.mention} ! La bonne réponse était bien **{perso}**. Mouais ok ça passe t'es pas trop nul...")
