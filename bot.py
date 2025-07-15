@@ -127,7 +127,6 @@ mots_cles = {
 
 
 abel = {"moi": "Tu n'es plus toi. Tu n'existes plus. Je t'ai supplanté. Adieu Babibel.",
-        "Abel": "Oui c'est moi le Babibel Originel (presque !) Je suis le seul le l'unique ! (presque). L'autre Babibel Originel n'est qu'un imposteur et doit être exterminé !",
         "gueule": "C'est pas très gentil, mais ça ne change rien au fait que je suis meilleur que toi.",
         "tg": "C'est pas très gentil, mais ça ne change rien au fait que je suis meilleur que toi.",
         "nan": "Si.",
@@ -140,7 +139,6 @@ abel = {"moi": "Tu n'es plus toi. Tu n'existes plus. Je t'ai supplanté. Adieu B
 
 jonathan = {"..": lambda : choice(("Pourquoi ces \"...\" Jonathan voyons...Il faut que tu te détendes je penses ça te fera du bien","Allons jojo...Un peu plus d'entrain je t'en prie.","Tant d'exaspération dans ta voix...Il n'y a pas à être condescendant comme ça mon petit...","Débarasse toi de ce mépris qu'il y a en toi...awoop comme tu dirais...On dirait Dany avec sa basse classe.")),
             "Jonathan": lambda : choice(("Tu t'es trompé je crois, c'est pas Jojo c'est \"Jonathan l'être suprême\" (nan en vrai c'est juste une personne condescendante).","Eh oh c'est bon Jojo là arrête de crier dès le matin.")),
-            "wesh" : "Toujours cette condescendance en toi.",
             "today" : "Arrête de parler anglais c'est fou ça.",
             "nuit" : "Dors bien mon petit jojo l'agneau de bretagne...",
             "tg" : "C'est fou d'être aussi méchant mon petit Jojo",
@@ -152,16 +150,15 @@ jonathan = {"..": lambda : choice(("Pourquoi ces \"...\" Jonathan voyons...Il fa
             "gueule":"Eh oh tu te calmes ou j'vais te retrouver tu vas voir"}
 
 tiphaine = {"bonsoir" : "Bonsoir Duchesse violente",
-            "Tiphaine": "Petit impertinent ! Lorsque tu t'adresses à elle appele la \"M'dame Tiphaine la Déesse ✨\" !",
             "hello" : "Oh ! Une personne incroyable fait son apparition",
             }
 
-florian = {"Florian": "Le nerd de service 🤓",
+florian = {
            "bonjour" : "Oh ! Une personne incroyable fait son apparition",
            "mon amour" : "Ooooh Tiphaine, tu es la plus belle, la plus gentille, la plus parfaite personne qui puis exister. Je t'aime plus que tout au monde. Merci.",
            "ta gueule":"D'accord, désolé de vous avoir importuné 😔. Sur ce, passez un très agréable moment. "}
 
-dany = {"Dany": "Pfff tu crois quoi Dany jamais il te répond il est toujours en retard. Attends encore 2 heures.",
+dany = {
         "bot" : "Je suis peut-être un bot, mais tu es un dictateur !"}
 
 noms = {993111040583798788:["Jonathan",jonathan],
@@ -306,7 +303,6 @@ async def on_message(message):
                 break
     for nom, emoji in react.items():
         if nom.lower() in message.content.lower():
-            print("hello")
             try:
                 await message.add_reaction(emoji)
             except discord.HTTPException:
