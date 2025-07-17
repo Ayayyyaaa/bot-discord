@@ -9,10 +9,9 @@ import asyncio
 #from invocs import *
 #import numpy as np
 from datetime import datetime
-
-
-
-
+import sqlite3
+conn = sqlite3.connect("invocs.db")
+cursor = conn.cursor()
 
 load_dotenv()
 
@@ -104,6 +103,8 @@ mots_cles = {
     "si" : "Non.",
     "quoi" : "feur",
     "ah" : "b",
+    "ok" : "Merci, tu admets que j'ai raison, hehe, je suis le meilleur.",
+    " ez" : "Par contre tu te calmes t'es nul enfait",
     "?" : lambda : choice(("Oui.","Je sais pas.","Non.","C'est quoi ces questions connes mdr")),
     "cassé" : "C'est faux je marche très bien, c'est Flo qui m'a crée, je ne peux pas comporter de défauts !",
     "répète" : "Non je ne me répète pas, tu es juste long à comprendre.",
@@ -175,15 +176,16 @@ react = {"Dany" : "🐦",
          "Tiphaine" : "✨"}
 
 ID_CIBLE = noms.keys()
-
 @bot.event
 async def on_ready():
-    await bot.wait_until_ready()
+    print(f"✅ Connecté en tant que {bot.user}")
     try:
-        synced = await bot.tree.sync()
-        print(f"✅ {len(synced)} commande(s) slash synchronisée(s).")
+        await bot.load_extension("invocs")
+        await bot.tree.sync()
+        print("✅ Extension 'invocs' et commandes slash synchronisées.")
     except Exception as e:
-        print(f"Erreur lors de la synchronisation des commandes : {e}")
+        print(f"❌ Erreur lors du chargement de l'extension : {e}")
+
 
 
 @bot.command(name="kick")
@@ -302,13 +304,54 @@ async def devinette(interaction: discord.Interaction):
 
     try:
         msg = await bot.wait_for("message", check=check, timeout=30)
+        user_id = msg.author.id
+        pseudo = msg.author.name
 
+        cursor.execute("SELECT correct, total FROM babinette_scores WHERE user_id = ?", (user_id,))
+        data = cursor.fetchone()
+        correct, total = data if data else (0, 0)
+        total += 1
         if msg.content.strip().lower() == perso.lower():
+            correct += 1
             await interaction.followup.send(f"✅ Bravo {msg.author.mention} ! La bonne réponse était bien **{perso}**. Mouais ok ça passe t'es pas trop nul...")
         else:
             await interaction.followup.send(f"❌ Mauvaise réponse, {msg.author.mention} ! C'était **{perso}**. \nT'es vraiment super nul...")
+        cursor.execute("""
+            INSERT OR REPLACE INTO babinette_scores (user_id, pseudo, correct, total)
+            VALUES (?, ?, ?, ?)
+        """, (user_id, pseudo, correct, total))
+        conn.commit()
     except asyncio.TimeoutError:
         await interaction.followup.send(f"⏱️ Temps écoulé ! La bonne réponse était **{perso}**. \nT'es vraiment super nul...")
+
+@bot.tree.command(name="babipodium", description="Affiche le top 5 des plus gros nerds de Genshin.")
+async def babipodium(interaction: discord.Interaction):
+    conn = sqlite3.connect("invocs.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT pseudo, correct, total,
+           ROUND(CAST(correct AS FLOAT) / total * 100, 1) as ratio
+    FROM babinette_scores
+    WHERE total > 0
+    ORDER BY correct DESC, ratio DESC
+    LIMIT 5
+    """)
+
+    results = cursor.fetchall()
+    conn.close()
+
+    if not results:
+        await interaction.response.send_message("Aucune donnée pour le moment. J'espère que t'es pas trop nul.")
+        return
+
+    podium = "\n".join(
+        f"**#{i+1}** – {row[0]} : {row[1]}/{row[2]} bonnes réponses ({row[3]}%)"
+        for i, row in enumerate(results)
+    )
+
+    await interaction.response.send_message("🏆 **Top 5 des nerds Genshin** 🧠\n" + podium)
+
 
 @bot.event
 async def on_message(message):
@@ -318,7 +361,7 @@ async def on_message(message):
     if message.author == bot.user:
         return
     if bot.user in message.mentions:
-        await message.channel.send(choice(("Tu t'es cru ou à me ping ? Tu veux te battre ? 😤", "Tu oses ping le grand, le beau, la parfait Babibel Artificiel ??!! Mortel imprtinent ! (à ne pas confondre avec le Babibel Originel, lui il est nul)")))
+        await message.channel.send(choice(("Tu t'es cru ou à me ping ? Tu veux te battre ? 😤", "Tu oses ping le grand, le beau, la parfait Babibel Artificiel ??!! Mortel impertinent ! (à ne pas confondre avec le Babibel Originel, lui il est nul)")))
         return
 
     user_id = message.author.id
