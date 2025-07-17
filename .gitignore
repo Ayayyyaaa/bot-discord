@@ -200,6 +200,9 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+# Ajoute cette ligne tout en bas de ton .gitignore
+invocs.db
+
 
 # Marimo
 marimo/_static/
