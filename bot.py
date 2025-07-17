@@ -9,15 +9,15 @@ import asyncio
 #from invocs import *
 #import numpy as np
 from datetime import datetime
-import mysql.connector
+#import mysql.connector
 
-conn = mysql.connector.connect(
-    host="sql210.infinityfree.com",  # à adapter depuis le cPanel InfinityFree
-    user="if0_39497307",
-    password="qQtuGjVYX6me",
-    database="if0_39497307_babibel"
-)
-cursor = conn.cursor()
+#conn = mysql.connector.connect(
+#    host="sql210.infinityfree.com",  # à adapter depuis le cPanel InfinityFree
+#    user="if0_39497307",
+#    password="qQtuGjVYX6me",
+#    database="if0_39497307_babibel"
+#)
+#cursor = conn.cursor()
 
 
 load_dotenv()
@@ -316,51 +316,51 @@ async def devinette(interaction: discord.Interaction):
         user_id = msg.author.id
         pseudo = msg.author.name
 
-        cursor.execute("SELECT correct, total FROM babinette_scores WHERE user_id = %s", (user_id,))
-        data = cursor.fetchone()
-        correct, total = data if data else (0, 0)
+        #cursor.execute("SELECT correct, total FROM babinette_scores WHERE user_id = %s", (user_id,))
+        #data = cursor.fetchone()
+        #correct, total = data if data else (0, 0)
         total += 1
         if msg.content.strip().lower() == perso.lower():
             correct += 1
             await interaction.followup.send(f"✅ Bravo {msg.author.mention} ! La bonne réponse était bien **{perso}**. Mouais ok ça passe t'es pas trop nul...")
         else:
             await interaction.followup.send(f"❌ Mauvaise réponse, {msg.author.mention} ! C'était **{perso}**. \nT'es vraiment super nul...")
-        cursor.execute("""
-            INSERT INTO babinette_scores (user_id, pseudo, correct, total)
-            VALUES (%s, %s, %s, %s)
-            ON DUPLICATE KEY UPDATE pseudo=VALUES(pseudo), correct=VALUES(correct), total=VALUES(total)
-        """, (user_id, pseudo, correct, total))
+        #cursor.execute("""
+        #    INSERT INTO babinette_scores (user_id, pseudo, correct, total)
+        #    VALUES (%s, %s, %s, %s)
+        #    ON DUPLICATE KEY UPDATE pseudo=VALUES(pseudo), correct=VALUES(correct), total=VALUES(total)
+        #""", (user_id, pseudo, correct, total))
 
-        conn.commit()
+        #conn.commit()
     except asyncio.TimeoutError:
         await interaction.followup.send(f"⏱️ Temps écoulé ! La bonne réponse était **{perso}**. \nT'es vraiment super nul...")
 
 @bot.tree.command(name="babipodium", description="Affiche le top 5 des plus gros nerds de Genshin.")
 async def babipodium(interaction: discord.Interaction):
 
-    cursor.execute("""
-    SELECT pseudo, correct, total,
-           ROUND(CAST(correct AS FLOAT) / total * 100, 1) as ratio
-    FROM babinette_scores
-    WHERE total > 0
-    ORDER BY correct DESC, ratio DESC
-    LIMIT 5
-    """)
+    #cursor.execute("""
+    #SELECT pseudo, correct, total,
+    #       ROUND(CAST(correct AS FLOAT) / total * 100, 1) as ratio
+    #FROM babinette_scores
+    #WHERE total > 0
+    #ORDER BY correct DESC, ratio DESC
+    #LIMIT 5
+    #""")
 
-    results = cursor.fetchall()
-    conn.close()
+    #results = cursor.fetchall()
+    #conn.close()
 
-    if not results:
-        await interaction.response.send_message("Aucune donnée pour le moment. J'espère que t'es pas trop nul.")
-        return
+    #if not results:
+    #    await interaction.response.send_message("Aucune donnée pour le moment. J'espère que t'es pas trop nul.")
+    #    return
 
-    podium = "\n".join(
-        f"**#{i+1}** – {row[0]} : {row[1]}/{row[2]} bonnes réponses ({row[3]}%)"
-        for i, row in enumerate(results)
-    )
+    #podium = "\n".join(
+    #    f"**#{i+1}** – {row[0]} : {row[1]}/{row[2]} bonnes réponses ({row[3]}%)"
+    #    for i, row in enumerate(results)
+    #)
 
-    await interaction.response.send_message("🏆 **Top 5 des nerds Genshin** 🧠\n" + podium)
-
+    #await interaction.response.send_message("🏆 **Top 5 des nerds Genshin** 🧠\n" + podium)
+    await interaction.response.send_message("🏆 **Top 5 des nerds Genshin** 🧠\nC'est Flo le meilleur hehe")
 
 @bot.event
 async def on_message(message):
