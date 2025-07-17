@@ -9,9 +9,16 @@ import asyncio
 #from invocs import *
 #import numpy as np
 from datetime import datetime
-import sqlite3
-conn = sqlite3.connect("invocs.db")
+import mysql.connector
+
+conn = mysql.connector.connect(
+    host="sql210.infinityfree.com",  # à adapter depuis le cPanel InfinityFree
+    user="if0_39497307",
+    password="qQtuGjVYX6me",
+    database="if0_39497307_babibel"
+)
 cursor = conn.cursor()
+
 
 load_dotenv()
 
@@ -61,7 +68,7 @@ def blague():
     rep = "Tu veux une blague ? Tiens avec plaisir hehe...Promis je suis aussi fort que Cyno ou la Citroën de Dany...Je reste un Babibel après tout\n\n"
     blagues = ["***Qu'est ce qui n'est pas un steak ? ✨*** \n\n*||Une Pastèque mdr ||*",
                "***L'autre jour j'ai raconté une blague à mes vêtements...✨*** \n\n*||Et ils étaient pliés mdr ||*",
-               "***Comment appelle-t-on une chauve-souris qui porte une péruque ? ✨*** \n\n*||Une souris mdr ||*",
+               "***Comment appelle-t-on une chauve-souris qui porte une perruque ? ✨*** \n\n*||Une souris mdr ||*",
                "***Qu'est ce qui est blanc, froid, qui tombe en hiver et qui termine par ard ? ✨*** \n\n*||De la neige, connard -_- ||*\n\n***Qu'est ce qui est blanc, froid, qui tombe en hiver et qui termine par ire ? ✨***\n\n*||De la neige, je viens de te le dire... -_- ||*",
                "***Pourquoi les aveugles tutoient toujours ? ✨*** \n\n*||Car ils ne vous voient pas mdr ||*",
                "***Qu'est-ce qui est jaune et qui attend ? ✨*** \n\n*-> Jonathan* \n\n*||Zhongli qui attend sa paye ||*",
@@ -237,7 +244,7 @@ persos = {"Diluc" : ["Cheveux rouges", "Mondstadt", "Grand", "Manteau", "Gants",
           "Xianyun" : ["Cheveux noirs", "Adepte", "Lunettes", "Yeux verts", "Épingle à cheveux", "Anémo", "Oiseau", "Liyue", "Catalyseur"],
           "Noelle" : ["Robe","Armure","Mondstadt","Géo","Claymore","Servante","Cheveux gris","Force"],
           "Razor" : ["Loup", "Cheveux gris", "Électro", "Claymore", "1 douche à son actif", "Abandoné", "Forêt"],
-          "Arlecchino" : ["Le valet", "Fatui", "Enfants", "Lune écarlate", "Dettes", "Bien habillé", "A battu Crucabena", "Cheveux blancs", "6 yeux", "Foyer", "Faux", "Ailes", "Pyro", "Lance", "Grande"],
+          "Arlecchino" : ["Le valet", "Fatui", "Enfants", "Lune écarlate", "Père", "Dettes", "Bien habillé", "A battu Crucabena", "Cheveux blancs", "6 yeux", "Foyer", "Faux", "Ailes", "Pyro", "Lance", "Grande"],
           "Lyney" : ["Fatui", "Pyro", "Arc", "Magicien", "Chapeau", "Cartes", "Fontaine", "Fraterie", "Vêtements noirs", "Cheveux blonds", "Homme"],
           "Lynette" : ["Fatui", "Anémo", "Magicien", "Chapeau", "Chat", "Épée à 1 main", "Timide", "Fontaine", "Vêtements noirs", "Noeud papillon","Cheveux blonds","Collants","Fraterie", "Femme"],
           "Freminet" : ["Fatui", "Taches de rousseur", "Fraterie",'Introverti',"Claymore","Cryo","Physique","Vêtements noirs","Fontaine", "Plongée", "Homme"],
@@ -278,7 +285,9 @@ persos = {"Diluc" : ["Cheveux rouges", "Mondstadt", "Grand", "Manteau", "Gants",
           "Rukkhadevata" : ["Archon", "Sumeru", "Sagesse", "Femme", "Grand", "Aranara", "Mort", "Irminsul", "Reine Aranyani", "Terminal akashien"],
           "Xiangling" : ["Femme", "Pyro", "Cuisine", "Lance", "Cheveux noirs", "Marchosius", "Liyue"],
           "Skirk" : ["Femme","Cryo","Épée à 1 main", "Abîme", "Surtalogi", "Posture du démon", "Cheveux blancs", "Autre monde","Yeux roses"],
-          "Surtalogi" : ["Cavalier abominable", "Pecheur","Khaenri'ah", "Force","Skirk", "Narval", "Autre monde", "Homme", "Immortel"]
+          "Surtalogi" : ["Cavalier abominable", "Pecheur","Khaenri'ah", "Force","Skirk", "Narval", "Autre monde", "Homme", "Immortel"],
+          "Elynas" : ["Fontaine", "Mélusine", "Grand", "Père", "Narzissenkreuz", "Ma mère","Eau primordiale"],
+          "Emilie" : ["Fontaine", "Dendro", "Lanterne", "Catalyseur", "Blond", "Parfum", "Lunettes", "Robe verte"]
           }
 
 
@@ -307,7 +316,7 @@ async def devinette(interaction: discord.Interaction):
         user_id = msg.author.id
         pseudo = msg.author.name
 
-        cursor.execute("SELECT correct, total FROM babinette_scores WHERE user_id = ?", (user_id,))
+        cursor.execute("SELECT correct, total FROM babinette_scores WHERE user_id = %s", (user_id,))
         data = cursor.fetchone()
         correct, total = data if data else (0, 0)
         total += 1
@@ -317,17 +326,17 @@ async def devinette(interaction: discord.Interaction):
         else:
             await interaction.followup.send(f"❌ Mauvaise réponse, {msg.author.mention} ! C'était **{perso}**. \nT'es vraiment super nul...")
         cursor.execute("""
-            INSERT OR REPLACE INTO babinette_scores (user_id, pseudo, correct, total)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO babinette_scores (user_id, pseudo, correct, total)
+            VALUES (%s, %s, %s, %s)
+            ON DUPLICATE KEY UPDATE pseudo=VALUES(pseudo), correct=VALUES(correct), total=VALUES(total)
         """, (user_id, pseudo, correct, total))
+
         conn.commit()
     except asyncio.TimeoutError:
         await interaction.followup.send(f"⏱️ Temps écoulé ! La bonne réponse était **{perso}**. \nT'es vraiment super nul...")
 
 @bot.tree.command(name="babipodium", description="Affiche le top 5 des plus gros nerds de Genshin.")
 async def babipodium(interaction: discord.Interaction):
-    conn = sqlite3.connect("invocs.db")
-    cursor = conn.cursor()
 
     cursor.execute("""
     SELECT pseudo, correct, total,
