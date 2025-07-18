@@ -396,39 +396,6 @@ async def babipodium(interaction: discord.Interaction):
 
 
 
-@bot.tree.command(name="babipodium", description="Affiche le top 5 des plus gros nerds de Genshin.")
-async def babipodium(interaction: discord.Interaction):
-
-    #cursor.execute("""
-    #SELECT pseudo, correct, total,
-    #       ROUND((correct * 1.0 / total) * 100, 1) as ratio
-    #FROM babinette_scores
-    #WHERE total > 0
-    #ORDER BY correct DESC, ratio DESC
-    #LIMIT 5
-    #""")
-
-    #results = cursor.fetchall()
-    #conn.close()
-    cursor.execute("""
-        SELECT pseudo, correct, total, ROUND(correct::numeric / NULLIF(total,0), 2) AS ratio
-        FROM babinette_scores
-        ORDER BY correct DESC
-        LIMIT 5
-        """)
-    results = cursor.fetchall()
-
-    if not results:
-        await interaction.response.send_message("Aucune donnée pour le moment. J'espère que t'es pas trop nul.")
-        return
-
-    podium = "\n".join(
-        f"**#{i+1}** – {row[0]} : {row[1]}/{row[2]} bonnes réponses ({row[3]}%)"
-        for i, row in enumerate(results)
-    )
-
-    await interaction.response.send_message("🏆 **Top 5 des nerds Genshin** 🧠\n" + podium)
-    #await interaction.response.send_message("🏆 **Top 5 des nerds Genshin** 🧠\nC'est Flo le meilleur hehe")
 
 @bot.event
 async def on_message(message):
