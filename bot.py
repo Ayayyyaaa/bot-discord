@@ -344,7 +344,7 @@ async def babipodium(interaction: discord.Interaction):
 
     cursor.execute("""
     SELECT pseudo, correct, total,
-           ROUND(CAST(correct AS FLOAT) / total * 100, 1) as ratio
+           ROUND((correct * 1.0 / total) * 100, 1) as ratio
     FROM babinette_scores
     WHERE total > 0
     ORDER BY correct DESC, ratio DESC
