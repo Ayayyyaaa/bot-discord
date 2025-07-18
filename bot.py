@@ -9,18 +9,28 @@ import asyncio
 #from invocs import *
 #import numpy as np
 from datetime import datetime
-import mysql.connector
+#import mysql.connector
 
 # Mets ici tes infos freemysql
-db_config = {
-    'host': 'sql8.freesqldatabase.com',    # ton host
-    'user': 'sql8790654',                  # ton username
-    'password': '8Ui6YgAqXn',         # ton mot de passe
-    'database': 'sql8790654'               # le nom de ta base
-}
+#db_config = {
+ #   'host': 'sql8.freesqldatabase.com',    # ton host
+#    'user': 'sql8790654',                  # ton username
+#    'password': '8Ui6YgAqXn',         # ton mot de passe
+#    'database': 'sql8790654'               # le nom de ta base
+#}
 
 # Connexion
-conn = mysql.connector.connect(**db_config)
+#conn = mysql.connector.connect(**db_config)
+#cursor = conn.cursor()
+import psycopg2
+
+# Idéalement : stocke ça dans une variable d’environnement
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+# Si tu veux tester localement sans .env :
+# DATABASE_URL = "postgresql://user:password@host:port/dbname"
+
+conn = psycopg2.connect(DATABASE_URL)
 cursor = conn.cursor()
 
 
@@ -339,20 +349,29 @@ async def devinette(interaction: discord.Interaction):
     except asyncio.TimeoutError:
         await interaction.followup.send(f"⏱️ Temps écoulé ! La bonne réponse était **{perso}**. \nT'es vraiment super nul...")
 
+
+
 @bot.tree.command(name="babipodium", description="Affiche le top 5 des plus gros nerds de Genshin.")
 async def babipodium(interaction: discord.Interaction):
 
-    cursor.execute("""
-    SELECT pseudo, correct, total,
-           ROUND((correct * 1.0 / total) * 100, 1) as ratio
-    FROM babinette_scores
-    WHERE total > 0
-    ORDER BY correct DESC, ratio DESC
-    LIMIT 5
-    """)
+    #cursor.execute("""
+    #SELECT pseudo, correct, total,
+    #       ROUND((correct * 1.0 / total) * 100, 1) as ratio
+    #FROM babinette_scores
+    #WHERE total > 0
+    #ORDER BY correct DESC, ratio DESC
+    #LIMIT 5
+    #""")
 
+    #results = cursor.fetchall()
+    #conn.close()
+    cursor.execute("""
+        SELECT pseudo, correct, total, ROUND(correct::numeric / NULLIF(total,0), 2) AS ratio
+        FROM babinette_scores
+        ORDER BY correct DESC
+        LIMIT 5
+        """)
     results = cursor.fetchall()
-    conn.close()
 
     if not results:
         await interaction.response.send_message("Aucune donnée pour le moment. J'espère que t'es pas trop nul.")
