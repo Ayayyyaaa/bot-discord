@@ -331,7 +331,7 @@ async def devinette(interaction: discord.Interaction):
         pseudo = msg.author.name
 
         # Vérifie si l'utilisateur a déjà un score
-        cursor.execute("SELECT correct, total FROM babinettes_scores WHERE user_id = %s", (user_id,))
+        cursor.execute("SELECT correct, total FROM babinette_scores WHERE user_id = %s", (user_id,))
         result = cursor.fetchone()
         correct, total = result if result else (0, 0)
 
@@ -344,7 +344,7 @@ async def devinette(interaction: discord.Interaction):
 
         # Insère ou met à jour avec PostgreSQL (ON CONFLICT)
         cursor.execute("""
-            INSERT INTO babinettes_scores (user_id, pseudo, correct, total)
+            INSERT INTO babinette_scores (user_id, pseudo, correct, total)
             VALUES (%s, %s, %s, %s)
             ON CONFLICT (user_id) DO UPDATE
             SET pseudo = EXCLUDED.pseudo,
@@ -360,13 +360,15 @@ async def devinette(interaction: discord.Interaction):
 
 
 
+
+
 @bot.tree.command(name="babipodium", description="Affiche le top 5 des plus gros nerds de Genshin.")
 async def babipodium(interaction: discord.Interaction):
 
     #cursor.execute("""
     #SELECT pseudo, correct, total,
     #       ROUND((correct * 1.0 / total) * 100, 1) as ratio
-    #FROM babinettes_scores
+    #FROM babinette_scores
     #WHERE total > 0
     #ORDER BY correct DESC, ratio DESC
     #LIMIT 5
@@ -374,25 +376,29 @@ async def babipodium(interaction: discord.Interaction):
 
     #results = cursor.fetchall()
     #conn.close()
-    cursor.execute("""
-        SELECT pseudo, correct, total, ROUND(correct::numeric / NULLIF(total,0), 2) AS ratio
-        FROM babinettes_scores
-        ORDER BY correct DESC
-        LIMIT 5
-        """)
-    results = cursor.fetchall()
+    try:
+        cursor.execute("""
+            SELECT pseudo, correct, total, ROUND(correct::numeric / NULLIF(total,0), 2) AS ratio
+            FROM babinette_scores
+            ORDER BY correct DESC
+            LIMIT 5
+            """)
+        results = cursor.fetchall()
 
-    if not results:
-        await interaction.response.send_message("Aucune donnée pour le moment. J'espère que t'es pas trop nul.")
-        return
+        if not results:
+            await interaction.response.send_message("Aucune donnée pour le moment. J'espère que t'es pas trop nul.")
+            return
 
-    podium = "\n".join(
-        f"**#{i+1}** – {row[0]} : {row[1]}/{row[2]} bonnes réponses ({row[3]}%)"
-        for i, row in enumerate(results)
-    )
+        podium = "\n".join(
+            f"**#{i+1}** – {row[0]} : {row[1]}/{row[2]} bonnes réponses ({row[3]}%)"
+            for i, row in enumerate(results)
+        )
 
-    await interaction.response.send_message("🏆 **Top 5 des nerds Genshin** 🧠\n" + podium)
-    #await interaction.response.send_message("🏆 **Top 5 des nerds Genshin** 🧠\nC'est Flo le meilleur hehe")
+        await interaction.response.send_message("🏆 **Top 5 des nerds Genshin** 🧠\n" + podium)
+        #await interaction.response.send_message("🏆 **Top 5 des nerds Genshin** 🧠\nC'est Flo le meilleur hehe")
+    except Exception as e:
+        conn.rollback()
+        print("Erreur SQL:", e)
 
 
 
