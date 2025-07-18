@@ -305,13 +305,16 @@ persos = {"Diluc" : ["Cheveux rouges", "Mondstadt", "Grand", "Manteau", "Gants",
           }
 
 
-@bot.tree.command(name="babinette", description="Devine le perso genshin ! Pour trouver les plus gros nerds.")
+@bot.tree.command(name="babinette", description="Devine le perso Genshin ! Pour trouver les plus gros nerds.")
 async def devinette(interaction: discord.Interaction):
-    # Choisit un personnage au hasard
+    from random import choice, sample  # Assure-toi d’avoir bien importé ça en haut
+
     perso, caract = choice(list(persos.items()))
     indices = sample(caract, 3)
 
-    await interaction.response.send_message(
+    await interaction.response.defer()  # Pour éviter l'erreur 404 interaction timeout
+
+    await interaction.followup.send(
         f"🔍 Trouve le perso Genshin avec ces 3 indices :\n"
         f"• {indices[0]}\n"
         f"• {indices[1]}\n"
@@ -320,34 +323,76 @@ async def devinette(interaction: discord.Interaction):
     )
 
     def check(msg):
-        return (
-            msg.channel == interaction.channel
-            and not msg.author.bot
-        )
+        return msg.channel == interaction.channel and not msg.author.bot
 
     try:
         msg = await bot.wait_for("message", check=check, timeout=30)
         user_id = msg.author.id
         pseudo = msg.author.name
 
+        # Vérifie si l'utilisateur a déjà un score
         cursor.execute("SELECT correct, total FROM babinette_scores WHERE user_id = %s", (user_id,))
-        data = cursor.fetchone()
-        correct, total = data if data else (0, 0)
+        result = cursor.fetchone()
+        correct, total = result if result else (0, 0)
+
         total += 1
         if msg.content.strip().lower() == perso.lower():
             correct += 1
-            await interaction.followup.send(f"✅ Bravo {msg.author.mention} ! La bonne réponse était bien **{perso}**. Mouais ok ça passe t'es pas trop nul...")
+            await interaction.followup.send(f"✅ Bravo {msg.author.mention} ! C'était **{perso}**. T'es pas trop nul...")
         else:
-            await interaction.followup.send(f"❌ Mauvaise réponse, {msg.author.mention} ! C'était **{perso}**. \nT'es vraiment super nul...")
+            await interaction.followup.send(f"❌ Mauvaise réponse, {msg.author.mention} ! C'était **{perso}**. NUL.")
+
+        # Insère ou met à jour avec PostgreSQL (ON CONFLICT)
         cursor.execute("""
             INSERT INTO babinette_scores (user_id, pseudo, correct, total)
             VALUES (%s, %s, %s, %s)
-            ON DUPLICATE KEY UPDATE pseudo=VALUES(pseudo), correct=VALUES(correct), total=VALUES(total)
+            ON CONFLICT (user_id) DO UPDATE
+            SET pseudo = EXCLUDED.pseudo,
+                correct = EXCLUDED.correct,
+                total = EXCLUDED.total
         """, (user_id, pseudo, correct, total))
 
         conn.commit()
+
     except asyncio.TimeoutError:
-        await interaction.followup.send(f"⏱️ Temps écoulé ! La bonne réponse était **{perso}**. \nT'es vraiment super nul...")
+        await interaction.followup.send(f"⏱️ Temps écoulé ! La bonne réponse était **{perso}**. T'es vraiment super nul...")
+
+
+
+
+@bot.tree.command(name="babipodium", description="Affiche le top 5 des plus gros nerds de Genshin.")
+async def babipodium(interaction: discord.Interaction):
+
+    #cursor.execute("""
+    #SELECT pseudo, correct, total,
+    #       ROUND((correct * 1.0 / total) * 100, 1) as ratio
+    #FROM babinette_scores
+    #WHERE total > 0
+    #ORDER BY correct DESC, ratio DESC
+    #LIMIT 5
+    #""")
+
+    #results = cursor.fetchall()
+    #conn.close()
+    cursor.execute("""
+        SELECT pseudo, correct, total, ROUND(correct::numeric / NULLIF(total,0), 2) AS ratio
+        FROM babinette_scores
+        ORDER BY correct DESC
+        LIMIT 5
+        """)
+    results = cursor.fetchall()
+
+    if not results:
+        await interaction.response.send_message("Aucune donnée pour le moment. J'espère que t'es pas trop nul.")
+        return
+
+    podium = "\n".join(
+        f"**#{i+1}** – {row[0]} : {row[1]}/{row[2]} bonnes réponses ({row[3]}%)"
+        for i, row in enumerate(results)
+    )
+
+    await interaction.response.send_message("🏆 **Top 5 des nerds Genshin** 🧠\n" + podium)
+    #await interaction.response.send_message("🏆 **Top 5 des nerds Genshin** 🧠\nC'est Flo le meilleur hehe")
 
 
 
