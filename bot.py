@@ -227,7 +227,7 @@ async def choix(interaction: discord.Interaction):
     await interaction.response.send_message(blague())
 
 persos = {"Diluc" : ["Cheveux rouges", "Mondstadt", "Grand", "Manteau", "Gants", "Bien habillé", "Ceinture", "Pyro", "Claymore", "Vin", "Riche", "Blazé"],
-          "Mona" : ["Chapeau", "Étoiles", "Mondstadt", "Moyen", "Gants", "Collants", "Tenue bleue/violette", "Pauvre", "Catalyseur", "Femme"],
+          "Mona" : ["Chapeau", "Étoiles", "Mondstadt", "Moyen", "Gants", "Collants", "Tenue bleue/violette", "Pauvre", "Catalyseur", "Femme", "Jolie"],
           "Istaroth" : ["Temps", "Cheveux blancs", "Ombre", "Gants", "Cheveux longs", "Vent", "Tenue blanche", "Truc qui vole au-dessus de sa tête","Très vieux"],
           "Pierro" : ["Fatui", "Masque", "Cheveux Blancs", "Chef", "+ fort qu'un dieu", "Khaenri'ah", "Rebellion", "Très vieux", "Le Fou"],
           "Neuvilette" : ["Hydro", "Fontaine", "Juge", "Charisme", "Mélusines", "Cheveux blancs", "Cheveux longs", "Dragon", "Bien habillé", "Habits bleus", "Très vieux", "Oratrice Mécanique d'Analyse Cardinale 🎶", "Canne", "Grand"],
@@ -301,7 +301,14 @@ persos = {"Diluc" : ["Cheveux rouges", "Mondstadt", "Grand", "Manteau", "Gants",
           "Skirk" : ["Femme","Cryo","Épée à 1 main", "Abîme", "Surtalogi", "Posture du démon", "Cheveux blancs", "Autre monde","Yeux roses"],
           "Surtalogi" : ["Cavalier abominable", "Pecheur","Khaenri'ah", "Force","Skirk", "Narval", "Autre monde", "Homme", "Immortel"],
           "Elynas" : ["Fontaine", "Mélusine", "Grand", "Père", "Narzissenkreuz", "Ma mère","Eau primordiale"],
-          "Emilie" : ["Fontaine", "Dendro", "Lanterne", "Catalyseur", "Blond", "Parfum", "Lunettes", "Robe verte"]
+          "Emilie" : ["Fontaine", "Dendro", "Lanterne", "Catalyseur", "Blond", "Parfum", "Lunettes", "Robe verte"],
+          "Asmodée" : ["Ombre", "Cheveux blancs", "Espace", "Sépare", "Scelle","Femme", 'Gardienne',"Cubes","Vêtements blancs", "Yeux jaunes"],
+          "Sandrone" : ["Fatui", "Le Pantin", "Robot", "Cheveux bruns", "Yeux bleus"],
+          "Layla" : ["sommeil", "études", "académie", "cryo", "femme", "épée à une main", "sumeru", "double personnalité", "jolie", "bouclier", "étoiles", "astrologie", "cernes"],
+          "Aloy" : ["Cryo", "Arc", "Autre monde", "Cheveux roux","Femme", "Moyen", "Yeux verts", "Tenue marron"],
+          "Baizhu" : ["Dendro", "Serpent", "Lunettes", "Médecin", "Cheveux verts", "Épingle à cheveux", "Pantalon violet","Chansheng","Immortalité", "Malédiction", "Liyue", "Catalyseur","Grand"],
+          "Chasca" : ["Canon", "Natlan", "Oiseau", "Anémo", "Vol", "Arc","Cheveux rouges", "Chapeau", "Femme", "Nom antique","Yeux bleus","Frange"],
+          "Chiori" : ["Géo", "Épée à 1 main", "Fontaine", "Poupée", "Couture","Mode","Cheveux bruns", "Robe jaune", "Fleurs rouges", "Collants", "Fuit Inazuma",]
           }
 
 
