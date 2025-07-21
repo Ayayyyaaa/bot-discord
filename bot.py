@@ -304,11 +304,12 @@ persos = {"Diluc" : ["Cheveux rouges", "Mondstadt", "Grand", "Manteau", "Gants",
           "Emilie" : ["Fontaine", "Dendro", "Lanterne", "Catalyseur", "Blond", "Parfum", "Lunettes", "Robe verte"],
           "Asmodée" : ["Ombre", "Cheveux blancs", "Espace", "Sépare", "Scelle","Femme", 'Gardienne',"Cubes","Vêtements blancs", "Yeux jaunes"],
           "Sandrone" : ["Fatui", "Le Pantin", "Robot", "Cheveux bruns", "Yeux bleus"],
-          "Layla" : ["sommeil", "études", "académie", "cryo", "femme", "épée à une main", "sumeru", "double personnalité", "jolie", "bouclier", "étoiles", "astrologie", "cernes"],
+          "Layla" : ["Sommeil", "Études", "Académie", "Cryo", "Femme", "Épée à une main", "Sumeru", "Double personnalité", "Jolie","Étoiles", "Astrologie", "Cernes"],
           "Aloy" : ["Cryo", "Arc", "Autre monde", "Cheveux roux","Femme", "Moyen", "Yeux verts", "Tenue marron"],
           "Baizhu" : ["Dendro", "Serpent", "Lunettes", "Médecin", "Cheveux verts", "Épingle à cheveux", "Pantalon violet","Chansheng","Immortalité", "Malédiction", "Liyue", "Catalyseur","Grand"],
           "Chasca" : ["Canon", "Natlan", "Oiseau", "Anémo", "Vol", "Arc","Cheveux rouges", "Chapeau", "Femme", "Nom antique","Yeux bleus","Frange"],
-          "Chiori" : ["Géo", "Épée à 1 main", "Fontaine", "Poupée", "Couture","Mode","Cheveux bruns", "Robe jaune", "Fleurs rouges", "Collants", "Fuit Inazuma",]
+          "Chiori" : ["Géo", "Épée à 1 main", "Fontaine", "Poupée", "Couture","Mode","Cheveux bruns", "Robe jaune", "Fleurs rouges", "Collants", "Fuit Inazuma"],
+          "Gaming" : ["Cheveux bruns/rouges", "Claymore", "Pyro", "Liyue", "Danse","T-shirt rouge", "Pantalon noir", "Moyen", "Masque", "Wushou"]
           }
 
 
