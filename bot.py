@@ -336,8 +336,9 @@ async def devinette(interaction: discord.Interaction):
     noms_persos = set(n.lower() for n in persos.keys())
 
     def check(msg):
-        if msg.channel != interaction.channel or msg.author.bot:
+        if msg.channel.id != interaction.channel.id or msg.author.bot:
             return False
+
 
         mots = msg.content.lower().split()
         mentions = [mot for mot in mots if mot in noms_persos]
@@ -356,7 +357,7 @@ async def devinette(interaction: discord.Interaction):
         #total += 1
 
         if nom_trouvé == perso.lower():
-            correct += 1
+            #correct += 1
             await interaction.followup.send(f"✅ Bravo {auteur.mention} ! C'était **{perso}**. T'es pas trop nul...")
         else:
             await interaction.followup.send(f"❌ Mauvaise réponse, {auteur.mention} ! C'était **{perso}**. NUL.")
