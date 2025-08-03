@@ -6,6 +6,8 @@ import os
 from dotenv import load_dotenv
 from discord.ext.commands import has_permissions, MissingPermissions
 import asyncio
+import threading
+from flask import Flask
 #from invocs import *
 #import numpy as np
 from datetime import datetime
@@ -25,13 +27,13 @@ from datetime import datetime
 import psycopg2
 
 # Idéalement : stocke ça dans une variable d’environnement
-DATABASE_URL = os.environ.get("DATABASE_URL")
+#DATABASE_URL = os.environ.get("DATABASE_URL")
 
 # Si tu veux tester localement sans .env :
 # DATABASE_URL = "postgresql://user:password@host:port/dbname"
 
-conn = psycopg2.connect(DATABASE_URL)
-cursor = conn.cursor()
+#conn = psycopg2.connect(DATABASE_URL)
+#cursor = conn.cursor()
 
 
 load_dotenv()
@@ -283,7 +285,7 @@ persos = {"Diluc" : ["Cheveux rouges", "Mondstadt", "Grand", "Manteau", "Gants",
           "Barbara" : ["Église", "Blond", "Femme", "Hydro", "Mondstadt","Draconesse", "Catalyseur", "Musique", "Jean", "Robe", "Fans","Tenue blanche"],
           "Fischl" : ["Tenue noire et violette", "Femme", "Blond", "Corbeau", "Électro", "Cache-oeil", "Mondstadt", "Yeux verts", "Arc", "Collants", "Aventurier", "Théâtre", "Princesse", "Amy"],
           "Rosalia" : ["Mondstadt", "Église", "Femme", "Cheveux roses", "Lance", "Assassin", "Espion", "Cryo"],
-          "Varka" : ["Grand Maître", "Favonius", "Très puissant", "Mondstadt", "Blond", "Hexenzirkel", "Chevalier de Boreas", "Concours de poisson contre Mavuika", "Grand", "Nod-Krai"],
+          "Varka" : ["Grand Maître", "Favonius", "Très puissant", "Mondstadt", "Blond", "Hexenzirkel", "Chevalier de Boreas", "Concours de boisson contre Mavuika", "Grand", "Nod-Krai", "Cicatrice" ],
           "Mika" : ["Mondstadt", "Blond", "Lance", "Arbalète", "Éclaireur", "Favonius", "Manteau bleu", "Schmidt", "Cartographe", "Cryo", "Homme"],
           "Xiuhcoatl" : ["Natlan", "Dragon", "Pyro", "Gosoythoth", "Serpent", "Ailes", "Flamme primitive", "Battu par Xbalanque"],
           "Pulcinella" : ["Petit", "Fatui", "Lunettes", "Le Coq", "Moustache", "Chapeau", "Snezhnaya", "Maire", "Cheveux blancs"],
@@ -309,7 +311,9 @@ persos = {"Diluc" : ["Cheveux rouges", "Mondstadt", "Grand", "Manteau", "Gants",
           "Baizhu" : ["Dendro", "Serpent", "Lunettes", "Médecin", "Cheveux verts", "Épingle à cheveux", "Pantalon violet","Chansheng","Immortalité", "Malédiction", "Liyue", "Catalyseur","Grand"],
           "Chasca" : ["Canon", "Natlan", "Oiseau", "Anémo", "Vol", "Arc","Cheveux rouges", "Chapeau", "Femme", "Nom antique","Yeux bleus","Frange"],
           "Chiori" : ["Géo", "Épée à 1 main", "Fontaine", "Poupée", "Couture","Mode","Cheveux bruns", "Robe jaune", "Fleurs rouges", "Collants", "Fuit Inazuma"],
-          "Gaming" : ["Cheveux bruns/rouges", "Claymore", "Pyro", "Liyue", "Danse","T-shirt rouge", "Pantalon noir", "Moyen", "Masque", "Wushou"]
+          "Gaming" : ["Cheveux bruns/rouges", "Claymore", "Pyro", "Liyue", "Danse","T-shirt rouge", "Pantalon noir", "Moyen", "Masque", "Wushou"],
+          "Nicole" : ["Cheveux blonds", "Hexenzirkel", "Fée", "Nod-krai", "Sorcière","Ailes","Cryo","Théière"],
+          "Nefer" : ["Égypte", "Chat"]
           }
 
 
@@ -346,10 +350,10 @@ async def devinette(interaction: discord.Interaction):
         mot = msg.content.lower()
         nom_trouvé = next((mot for mot in mot.split() if mot in noms_persos), None)
 
-        cursor.execute("SELECT correct, total FROM babinette_scores WHERE user_id = %s", (auteur.id,))
-        result = cursor.fetchone()
-        correct, total = result if result else (0, 0)
-        total += 1
+        #cursor.execute("SELECT correct, total FROM babinette_scores WHERE user_id = %s", (auteur.id,))
+        #result = cursor.fetchone()
+        #correct, total = result if result else (0, 0)
+        #total += 1
 
         if nom_trouvé == perso.lower():
             correct += 1
@@ -357,34 +361,34 @@ async def devinette(interaction: discord.Interaction):
         else:
             await interaction.followup.send(f"❌ Mauvaise réponse, {auteur.mention} ! C'était **{perso}**. NUL.")
 
-        cursor.execute("""
-            INSERT INTO babinette_scores (user_id, pseudo, correct, total)
-            VALUES (%s, %s, %s, %s)
-            ON CONFLICT (user_id) DO UPDATE
-            SET pseudo = EXCLUDED.pseudo,
-                correct = EXCLUDED.correct,
-                total = EXCLUDED.total
-        """, (auteur.id, auteur.name, correct, total))
-        conn.commit()
+        #cursor.execute("""
+        #    INSERT INTO babinette_scores (user_id, pseudo, correct, total)
+        #    VALUES (%s, %s, %s, %s)
+        #    ON CONFLICT (user_id) DO UPDATE
+        #    SET pseudo = EXCLUDED.pseudo,
+        #        correct = EXCLUDED.correct,
+        #        total = EXCLUDED.total
+        #""", (auteur.id, auteur.name, correct, total))
+        #conn.commit()
 
     except asyncio.TimeoutError:
         # Si personne n'a répondu correctement, c'est une défaite pour l'utilisateur qui a lancé la commande
-        cursor.execute("SELECT correct, total FROM babinette_scores WHERE user_id = %s", (user_id,))
-        result = cursor.fetchone()
-        correct, total = result if result else (0, 0)
-        total += 1
+        #cursor.execute("SELECT correct, total FROM babinette_scores WHERE user_id = %s", (user_id,))
+        #result = cursor.fetchone()
+        #correct, total = result if result else (0, 0)
+        #total += 1
 
         await interaction.followup.send(f"⏱️ Temps écoulé ! La bonne réponse était **{perso}**. T'es vraiment super nul...")
 
-        cursor.execute("""
-            INSERT INTO babinette_scores (user_id, pseudo, correct, total)
-            VALUES (%s, %s, %s, %s)
-            ON CONFLICT (user_id) DO UPDATE
-            SET pseudo = EXCLUDED.pseudo,
-                correct = EXCLUDED.correct,
-                total = EXCLUDED.total
-        """, (user_id, pseudo, correct, total))
-        conn.commit()
+        #cursor.execute("""
+        #    INSERT INTO babinette_scores (user_id, pseudo, correct, total)
+        #    VALUES (%s, %s, %s, %s)
+        #    ON CONFLICT (user_id) DO UPDATE
+        #    SET pseudo = EXCLUDED.pseudo,
+        #        correct = EXCLUDED.correct,
+        #        total = EXCLUDED.total
+        #""", (user_id, pseudo, correct, total))
+        #conn.commit()
 
 
 
@@ -406,29 +410,29 @@ async def babipodium(interaction: discord.Interaction):
 
     #results = cursor.fetchall()
     #conn.close()
-    try:
-        cursor.execute("""
-            SELECT pseudo, correct, total, ROUND(correct::numeric / NULLIF(total,0), 2) AS ratio
-            FROM babinette_scores
-            ORDER BY correct DESC
-            LIMIT 5
-            """)
-        results = cursor.fetchall()
+    #try:
+        #cursor.execute("""
+        #    SELECT pseudo, correct, total, ROUND(correct::numeric / NULLIF(total,0), 2) AS ratio
+        #    FROM babinette_scores
+        #    ORDER BY correct DESC
+        #    LIMIT 5
+        #    """)
+        #results = cursor.fetchall()
 
-        if not results:
-            await interaction.response.send_message("Aucune donnée pour le moment. J'espère que t'es pas trop nul.")
-            return
+        #if not results:
+        #    await interaction.response.send_message("Aucune donnée pour le moment. J'espère que t'es pas trop nul.")
+        #    return
 
-        podium = "\n".join(
-            f"**#{i+1}** – {row[0]} : {row[1]}/{row[2]} bonnes réponses ({row[3]}%)"
-            for i, row in enumerate(results)
-        )
+        #podium = "\n".join(
+        #    f"**#{i+1}** – {row[0]} : {row[1]}/{row[2]} bonnes réponses ({row[3]}%)"
+        #    for i, row in enumerate(results)
+        #)
 
-        await interaction.response.send_message("🏆 **Top 5 des nerds Genshin** 🧠\n" + podium)
-        #await interaction.response.send_message("🏆 **Top 5 des nerds Genshin** 🧠\nC'est Flo le meilleur hehe")
-    except Exception as e:
-        conn.rollback()
-        print("Erreur SQL:", e)
+        #await interaction.response.send_message("🏆 **Top 5 des nerds Genshin** 🧠\n" + podium)
+    await interaction.response.send_message("🏆 **Top 5 des nerds Genshin** 🧠\nC'est Flo le meilleur hehe")
+    #except Exception as e:
+    #    conn.rollback()
+    #    print("Erreur SQL:", e)
 
 
 
@@ -502,6 +506,16 @@ async def on_message(message):
 
     await bot.process_commands(message)
 
+app = Flask("")
 
+@app.route("/")
+def home():
+    return "Le bot tourne bien !"
+
+def run():
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+
+# Lancer le serveur dans un thread séparé
+threading.Thread(target=run).start()
 
 bot.run(os.getenv("TOKEN"))
