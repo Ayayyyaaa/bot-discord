@@ -316,7 +316,6 @@ persos = {"Diluc" : ["Cheveux rouges", "Mondstadt", "Grand", "Manteau", "Gants",
           "Nefer" : ["Égypte", "Chat"]
           }
 
-
 @bot.tree.command(name="babinette", description="Devine le perso Genshin ! Pour trouver les plus gros nerds.")
 async def devinette(interaction: discord.Interaction):
     perso, caract = choice(list(persos.items()))
@@ -331,66 +330,25 @@ async def devinette(interaction: discord.Interaction):
         f"Réponds dans le chat (30 secondes) !"
     )
 
-    user_id = interaction.user.id
-    pseudo = interaction.user.name
     noms_persos = set(n.lower() for n in persos.keys())
 
     def check(msg):
-        if msg.channel.id != interaction.channel.id or msg.author.bot:
-            return False
-
-
-        mots = msg.content.lower().split()
-        mentions = [mot for mot in mots if mot in noms_persos]
-
-        return len(mentions) == 1  # Seulement un nom de perso autorisé
+        return (
+            msg.channel.id == interaction.channel.id and
+            not msg.author.bot and
+            any(mot in noms_persos for mot in msg.content.lower().split())
+        )
 
     try:
         msg = await bot.wait_for("message", check=check, timeout=30)
-        auteur = msg.author
-        mot = msg.content.lower()
-        nom_trouvé = next((mot for mot in mot.split() if mot in noms_persos), None)
-
-        #cursor.execute("SELECT correct, total FROM babinette_scores WHERE user_id = %s", (auteur.id,))
-        #result = cursor.fetchone()
-        #correct, total = result if result else (0, 0)
-        #total += 1
+        nom_trouvé = next((mot for mot in msg.content.lower().split() if mot in noms_persos), None)
 
         if nom_trouvé == perso.lower():
-            #correct += 1
-            await interaction.followup.send(f"✅ Bravo {auteur.mention} ! C'était **{perso}**. T'es pas trop nul...")
+            await interaction.followup.send(f"✅ Bravo {msg.author.mention} ! C'était **{perso}**. T'es pas trop nul...")
         else:
-            await interaction.followup.send(f"❌ Mauvaise réponse, {auteur.mention} ! C'était **{perso}**. NUL.")
-
-        #cursor.execute("""
-        #    INSERT INTO babinette_scores (user_id, pseudo, correct, total)
-        #    VALUES (%s, %s, %s, %s)
-        #    ON CONFLICT (user_id) DO UPDATE
-        #    SET pseudo = EXCLUDED.pseudo,
-        #        correct = EXCLUDED.correct,
-        #        total = EXCLUDED.total
-        #""", (auteur.id, auteur.name, correct, total))
-        #conn.commit()
-
+            await interaction.followup.send(f"❌ Mauvaise réponse, {msg.author.mention} ! C'était **{perso}**. NUL.")
     except asyncio.TimeoutError:
-        # Si personne n'a répondu correctement, c'est une défaite pour l'utilisateur qui a lancé la commande
-        #cursor.execute("SELECT correct, total FROM babinette_scores WHERE user_id = %s", (user_id,))
-        #result = cursor.fetchone()
-        #correct, total = result if result else (0, 0)
-        #total += 1
-
         await interaction.followup.send(f"⏱️ Temps écoulé ! La bonne réponse était **{perso}**. T'es vraiment super nul...")
-
-        #cursor.execute("""
-        #    INSERT INTO babinette_scores (user_id, pseudo, correct, total)
-        #    VALUES (%s, %s, %s, %s)
-        #    ON CONFLICT (user_id) DO UPDATE
-        #    SET pseudo = EXCLUDED.pseudo,
-        #        correct = EXCLUDED.correct,
-        #        total = EXCLUDED.total
-        #""", (user_id, pseudo, correct, total))
-        #conn.commit()
-
 
 
 
