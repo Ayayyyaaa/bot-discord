@@ -1,6 +1,4 @@
 discord.py
 python-dotenv
 numpy
-mysql.connector
-psycopg2
 flask

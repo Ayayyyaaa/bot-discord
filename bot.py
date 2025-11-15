@@ -9,29 +9,13 @@ import asyncio
 #from invocs import *
 #import numpy as np
 from datetime import datetime
-#import mysql.connector
+import sqlite3
 
-# Mets ici tes infos freemysql
-#db_config = {
- #   'host': 'sql8.freesqldatabase.com',    # ton host
-#    'user': 'sql8790654',                  # ton username
-#    'password': '8Ui6YgAqXn',         # ton mot de passe
-#    'database': 'sql8790654'               # le nom de ta base
-#}
 
-# Connexion
-#conn = mysql.connector.connect(**db_config)
-#cursor = conn.cursor()
-import psycopg2
 
-# Idéalement : stocke ça dans une variable d’environnement
-DATABASE_URL = os.environ.get("DATABASE_URL")
-
-# Si tu veux tester localement sans .env :
-# DATABASE_URL = "postgresql://user:password@host:port/dbname"
-
-conn = psycopg2.connect(DATABASE_URL)
+conn = sqlite3.connect('invocs.db')  
 cursor = conn.cursor()
+
 
 
 load_dotenv()
@@ -348,7 +332,7 @@ async def devinette(interaction: discord.Interaction):
         mot = msg.content.lower()
         nom_trouvé = next((mot for mot in mot.split() if mot in noms_persos), None)
 
-        cursor.execute("SELECT correct, total FROM babinette_scores WHERE user_id = %s", (auteur.id,))
+        cursor.execute("SELECT correct, total FROM babinette_scores WHERE user_id = ?", (auteur.id,))
         result = cursor.fetchone()
         correct, total = result if result else (0, 0)
         total += 1
@@ -361,7 +345,7 @@ async def devinette(interaction: discord.Interaction):
 
         cursor.execute("""
             INSERT INTO babinette_scores (user_id, pseudo, correct, total)
-            VALUES (%s, %s, %s, %s)
+            VALUES (?, ?, ?, ?)
             ON CONFLICT (user_id) DO UPDATE
             SET pseudo = EXCLUDED.pseudo,
                 correct = EXCLUDED.correct,
@@ -371,7 +355,7 @@ async def devinette(interaction: discord.Interaction):
 
     except asyncio.TimeoutError:
         # Si personne n'a répondu correctement, c'est une défaite pour l'utilisateur qui a lancé la commande
-        cursor.execute("SELECT correct, total FROM babinette_scores WHERE user_id = %s", (user_id,))
+        cursor.execute("SELECT correct, total FROM babinette_scores WHERE user_id = ?", (user_id,))
         result = cursor.fetchone()
         correct, total = result if result else (0, 0)
         total += 1
@@ -380,7 +364,7 @@ async def devinette(interaction: discord.Interaction):
 
         cursor.execute("""
             INSERT INTO babinette_scores (user_id, pseudo, correct, total)
-            VALUES (%s, %s, %s, %s)
+            VALUES (?, ?, ?, ?)
             ON CONFLICT (user_id) DO UPDATE
             SET pseudo = EXCLUDED.pseudo,
                 correct = EXCLUDED.correct,
@@ -396,18 +380,6 @@ async def devinette(interaction: discord.Interaction):
 
 @bot.tree.command(name="babipodium", description="Affiche le top 5 des plus gros nerds de Genshin.")
 async def babipodium(interaction: discord.Interaction):
-
-    #cursor.execute("""
-    #SELECT pseudo, correct, total,
-    #       ROUND((correct * 1.0 / total) * 100, 1) as ratio
-    #FROM babinette_scores
-    #WHERE total > 0
-    #ORDER BY correct DESC, ratio DESC
-    #LIMIT 5
-    #""")
-
-    #results = cursor.fetchall()
-    #conn.close()
     try:
         cursor.execute("""
             SELECT pseudo, correct, total, ROUND(correct::numeric / NULLIF(total,0), 2) AS ratio
