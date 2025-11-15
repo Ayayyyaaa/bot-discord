@@ -22,8 +22,8 @@ load_dotenv()
 
 
 intents = discord.Intents.default()
-intents.message_content = True  # Nécessaire pour lire les messages
-intents.members = True  # Obligatoire pour avoir accès aux mentions
+intents.message_content = True  
+intents.members = True 
 bot = commands.Bot(command_prefix="babi", intents=intents)
 
 id = {"Jonathan":993111040583798788,
@@ -90,7 +90,6 @@ def blague():
 
 
 
-# Liste des mots-clés
 mots_cles = {
     "abel": "Oui c'est moi le Babibel Originel (presque !) Je suis le seul le l'unique ! (presque). L'autre Babibel Originel n'est qu'un imposteur et doit être exterminé !",
     "tiph": "Petit impertinent ! Lorsque tu t'adresses à elle appele la \"M'dame Tiphaine la Déesse ✨\" !",
@@ -324,7 +323,7 @@ async def devinette(interaction: discord.Interaction):
         mots = msg.content.lower().split()
         mentions = [mot for mot in mots if mot in noms_persos]
 
-        return len(mentions) == 1  # Seulement un nom de perso autorisé
+        return len(mentions) == 1 
 
     try:
         msg = await bot.wait_for("message", check=check, timeout=30)
@@ -354,7 +353,6 @@ async def devinette(interaction: discord.Interaction):
         conn.commit()
 
     except asyncio.TimeoutError:
-        # Si personne n'a répondu correctement, c'est une défaite pour l'utilisateur qui a lancé la commande
         cursor.execute("SELECT correct, total FROM babinette_scores WHERE user_id = ?", (user_id,))
         result = cursor.fetchone()
         correct, total = result if result else (0, 0)
@@ -430,7 +428,7 @@ async def on_message(message):
             await message.channel.set_permissions(message.author, overwrite=overwrite)
             await asyncio.sleep(10)  # Attendre 10 secondes
 
-            # Réinitialise les permissions (retour à la normale)
+            # Réinitialise les permissions
             await message.channel.set_permissions(message.author, overwrite=None)
             await message.channel.send(f"{message.author.mention} est de retour... Malheureusement. Tu nous avais vraiment pas manqué. Fais gaffe à toi sinon j'te remute.")
         except discord.Forbidden:

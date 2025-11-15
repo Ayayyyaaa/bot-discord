@@ -5,11 +5,11 @@ from discord import app_commands
 import discord
 from discord.ext import commands
 from math import exp
-# Connexion à la base (créée si elle n'existe pas)
+
 conn = sqlite3.connect("invocs.db")
 cursor = conn.cursor()
 
-# Table des utilisateurs
+
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY,  -- ID Discord
@@ -101,9 +101,9 @@ print("✅ Base de données initialisée avec succès !")
 
 items = {
     6: ["Skirk", "Escoffier", "Kokomi","Neuvilette","Le Babibel Artificiel"],
-    5: ["Diluc", "Mona", "Qiqi", "Keqing", "Jean"],  # Persos 5★
-    4: ["Razor", "Sucrose", "Bennett", "Chongyun"],  # Persos 4★
-    3: ["Épée en fer", "Arc du chasseur", "Catalyseur rouillé"]  # Armes 3★
+    5: ["Diluc", "Mona", "Qiqi", "Keqing", "Jean"],  # Persos 5*
+    4: ["Razor", "Sucrose", "Bennett", "Chongyun"],  # Persos 4*
+    3: ["Épée en fer", "Arc du chasseur", "Catalyseur rouillé"]  # Armes 3*
 }
 
 class Invoc(commands.Cog):
@@ -121,7 +121,6 @@ class Invoc(commands.Cog):
             return
         user_id = interaction.user.id
 
-        # Ouvre la connexion ici
         conn = sqlite3.connect("invocs.db")
         cursor = conn.cursor()
 
@@ -148,7 +147,7 @@ class Invoc(commands.Cog):
             else:
                 pity_counter_4 += 1
 
-            # 50/50 sur 5★
+            # 50/50 sur 5*
             if rarity == 5:
                 is_rate_up = np.random.rand() < 0.5 if fifty_fifty_lost_5 == 0 else True
                 if is_rate_up:
@@ -177,7 +176,6 @@ class Invoc(commands.Cog):
         await interaction.response.send_message(f"🎉 Tu as obtenu :\n" + "\n".join(results))
 
     def get_rarity(self, pity4,pity5):
-        # Probabilités ajustées avec pity
         if pity5 >= 90:
             return 5
         elif pity4 >= 10:
