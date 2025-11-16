@@ -15,8 +15,17 @@ import sqlite3
 
 conn = sqlite3.connect('invocs.db')  
 cursor = conn.cursor()
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS babinette_scores (
+        user_id TEXT PRIMARY KEY,
+        pseudo TEXT,
+        correct INTEGER,
+        total INTEGER
+    )
+""")
+conn.commit()
 
-
+print("Hello ! Me voici pret")
 
 load_dotenv()
 
@@ -378,13 +387,16 @@ async def devinette(interaction: discord.Interaction):
 
 @bot.tree.command(name="babipodium", description="Affiche le top 5 des plus gros nerds de Genshin.")
 async def babipodium(interaction: discord.Interaction):
+    print("Hello")
     try:
         cursor.execute("""
-            SELECT pseudo, correct, total, ROUND(correct::numeric / NULLIF(total,0), 2) AS ratio
+            SELECT pseudo, correct, total,
+                ROUND(100.0 * correct / CASE WHEN total = 0 THEN 1 ELSE total END, 2) AS ratio
             FROM babinette_scores
             ORDER BY correct DESC
             LIMIT 5
-            """)
+        """)
+
         results = cursor.fetchall()
 
         if not results:
@@ -399,8 +411,12 @@ async def babipodium(interaction: discord.Interaction):
         await interaction.response.send_message("🏆 **Top 5 des nerds Genshin** 🧠\n" + podium)
         #await interaction.response.send_message("🏆 **Top 5 des nerds Genshin** 🧠\nC'est Flo le meilleur hehe")
     except Exception as e:
-        conn.rollback()
-        print("Erreur SQL:", e)
+        print(f"Erreur dans babipodium : {e}")
+        try:
+            await interaction.response.send_message(f"Erreur dans podium : {e}")
+        except Exception as ee:
+            print(f"Impossible d'envoyer le message d'erreur : {ee}")
+
 
 
 
@@ -477,3 +493,4 @@ async def on_message(message):
 
 
 bot.run(os.getenv("TOKEN"))
+#sudo docker compose up --build -d

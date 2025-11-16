@@ -1,0 +1,9 @@
+version: "3"
+services:
+  bot:
+    build: .
+    container_name: my-discord-bot
+    volumes:
+      - ./invocs.db:/app/invocs.db
+    restart: unless-stopped
+
